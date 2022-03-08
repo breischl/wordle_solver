@@ -93,20 +93,19 @@ def is_possible_solution(word: str, guess: str, letter_scores: list) -> bool:
 if __name__ == "__main__":
     words = load_dictionary()
     solution = random.choice(words)
-    print("Solution is '{0}'".format(solution))
+    print(f"Solution is '{solution}'")
 
     for guess_num in range(1, 7):
-        print("Dictionary contains {0} words".format(len(words)))
+        print(f"\nI can think of {len(words)} possible words")
 
         guess_word = random.choice(words)
-        print("For guess {0} I'll try '{1}'".format(guess_num, guess_word))
+        print(f"Guess {guess_num}: {guess_word}")
         (is_correct, letter_scores) = check_word(solution, guess_word)
 
         if is_correct:
-            print("{0} is correct, I win!".format(guess_word))
+            print(f"'{guess_word}' is correct, I win!")
             break
 
-        print("{0} was wrong, results by letter are {1}".format(
-            guess_word, letter_scores))
+        print(f"'{guess_word}' was wrong, letter scores are: {letter_scores}")
         words = [w for w in words if is_possible_solution(
             w, guess_word, letter_scores)]
