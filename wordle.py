@@ -3,23 +3,42 @@ import random
 WRONG = -1
 MISPLACED = 0
 CORRECT = 1
+DICTIONARY_FILE = 'words_alpha.txt'
 
 
-def load_words():
-    with open('words_alpha.txt') as word_file:
+def load_dictionary() -> list:
+    '''Load and return the dictionary as a list[str]
+    Returns: list[str]
+    '''
+    with open(DICTIONARY_FILE) as word_file:
         valid_words = [w
                        for w in word_file.read().splitlines()
                        if is_valid_word(w)]
     return valid_words
 
 
+def save_dictionary(words: list) -> None:
+    '''Save the given list to the dictionary file
+    '''
+
+    with open(DICTIONARY_FILE) as word_file:
+        word_file.writelines(words)
+
+
 def is_valid_word(w: str):
+    '''Filter invalid words from the dictionary
+    '''
     return len(w) == 5 and w.isalpha()
 
 
 def check_word(solution: str, guess: str) -> tuple:
+    '''Check whether a given guess matches the expected solution, and return that along with match scores for each letter. 
+
+
+    Returns: (is_correct : bool, letter_scores : list[int])
+    '''
     if solution == guess:
-        return (True, [])
+        return (True, [CORRECT for x in range(0, 5)])
 
     letter_scores = []
     for idx in range(0, len(guess)):
@@ -36,6 +55,8 @@ def check_word(solution: str, guess: str) -> tuple:
 
 
 def is_possible_solution(word: str, guess: str, letter_scores: list) -> bool:
+    '''Check if a given word could possibly be the solution, given the results of a previous guess.
+    '''
     for idx in range(0, len(guess)):
         l_word = word[idx]
         l_guess = guess[idx]
@@ -60,11 +81,11 @@ def is_possible_solution(word: str, guess: str, letter_scores: list) -> bool:
 
 
 if __name__ == "__main__":
-    words = load_words()
+    words = load_dictionary()
     solution = random.choice(words)
     print("Solution is '{0}'".format(solution))
 
-    for guess_num in range(1, 6):
+    for guess_num in range(1, 7):
         print("Dictionary contains {0} words".format(len(words)))
 
         guess_word = random.choice(words)
