@@ -1,4 +1,4 @@
-import wordle as wordle
+import wordle_dict as wordle
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -48,12 +48,16 @@ def extract_letter_counts_for_word(position_counts: list[dict], word: str) -> li
     return frequencies
 
 
-def find_highest_scoring_word(wordlist: list, allow_dup_letters: bool) -> tuple[str, int]:
+def find_highest_scoring_word(wordlist: list, allow_dup_letters: bool) -> str:
+    return find_highest_scoring_words(wordlist, allow_dup_letters)[0][0]
+
+
+def find_highest_scoring_words(wordlist: list, allow_dup_letters: bool) -> list[tuple[str, int]]:
     position_counts = count_letters_by_position(wordlist)
 
     # TODO: I bet itertools has a cleaner way to do this
     best_score = 0
-    best_word = None
+    best_words = []
 
     for word in wordlist:
         if not allow_dup_letters and len(set(word)) != len(word):
@@ -62,10 +66,18 @@ def find_highest_scoring_word(wordlist: list, allow_dup_letters: bool) -> tuple[
         frequencies = extract_letter_counts_for_word(position_counts, word)
         score = sum(frequencies)
         if score > best_score:
-            best_word = word
+            best_words = [word]
             best_score = score
+        elif score == best_score:
+            best_words.append(word)
 
-    return (best_word, best_score)
+    if len(best_words) > 0:
+        return (best_words, best_score)
+    elif allow_dup_letters:
+        return find_highest_scoring_words(wordlist, True)
+    else:
+        # Shouldn't really happen unless the list is empty anyway
+        return (wordlist[0], 0)
 
 
 def letter_count(wordlist: list, extractor: callable) -> list:
@@ -119,8 +131,8 @@ if __name__ == "__main__":
     # plt.show()
 
     letter_pos_counts = count_letters_by_position(words)
-    ranked_letters = rank_letters_by_position(letter_pos_counts, top_n=2)
+    ranked_letters = rank_letters_by_position(letter_pos_counts, top_n=5)
     print(ranked_letters)
 
-    print(find_highest_scoring_word(words, allow_dup_letters=True))
-    print(find_highest_scoring_word(words, allow_dup_letters=False))
+    print(find_highest_scoring_words(words, allow_dup_letters=True))
+    print(find_highest_scoring_words(words, allow_dup_letters=False))

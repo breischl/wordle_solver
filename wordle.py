@@ -1,44 +1,10 @@
 import random
+import stats
+from wordle_dict import *
 
 WRONG = -1
 MISPLACED = 0
 CORRECT = 1
-DICTIONARY_FILE = 'words_alpha.txt'
-
-
-def load_dictionary() -> list:
-    '''Load and return the dictionary as a list[str]
-    Returns: list[str]
-    '''
-    with open(DICTIONARY_FILE, mode="rt") as word_file:
-        valid_words = [w for w in word_file.read().splitlines()]
-    return valid_words
-
-
-def cleanse_dictionary() -> None:
-    '''Read in the dictionary file, remove invalid words, and write the result back'''
-    with open(DICTIONARY_FILE, mode="rt") as word_file:
-        valid_words = [w
-                       for w in word_file.read().splitlines()
-                       if is_valid_word(w)]
-
-    save_dictionary(valid_words)
-
-
-def save_dictionary(words: list) -> None:
-    '''Save the given list to the dictionary file
-    '''
-
-    with open(DICTIONARY_FILE, mode="wt") as word_file:
-        for w in words:
-            word_file.write(w)
-            word_file.write("\n")
-
-
-def is_valid_word(w: str):
-    '''Filter invalid words from the dictionary
-    '''
-    return len(w) == 5 and w.isalpha()
 
 
 def check_word(solution: str, guess: str) -> tuple:
@@ -98,8 +64,11 @@ if __name__ == "__main__":
     for guess_num in range(1, 7):
         print(f"\nI can think of {len(words)} possible words")
 
-        guess_word = random.choice(words)
-        print(f"Guess {guess_num}: {guess_word}")
+        allow_dup = (guess_num > 3)
+        best_guesses = stats.find_highest_scoring_words(words, allow_dup)
+
+        print(f"Best words are {best_guesses}, I'll use the first one")
+        guess_word = best_guesses[0][0]
         (is_correct, letter_scores) = check_word(solution, guess_word)
 
         if is_correct:

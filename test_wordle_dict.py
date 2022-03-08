@@ -1,4 +1,4 @@
-import wordle
+import wordle_dict as wordle
 import unittest
 from unittest import TestCase
 
