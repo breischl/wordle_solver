@@ -12,7 +12,7 @@ class TestGlobalFrequencyStrategy(unittest.TestCase):
 
     def test_first_guess_works(self):
         guess = self.strat.next_guess()
-        self.assertEqual(guess, "arose")
+        self.assertEqual(guess, "aeros")
 
     def test_accepts_feedback(self):
         initial_size = len(self.strat.words)

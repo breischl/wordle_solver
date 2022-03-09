@@ -36,7 +36,6 @@ class TestPositionalFrequencyStrategy(unittest.TestCase):
 
     def test_sissy(self):
         words = wd.load_dictionary()
-        print(f"dictionary contains {len(words)} words")
         mystrat = pfs.PositionalFrequencyStrategy(
             dictionary=words,
             allow_dup_letters_after_guess=0,
