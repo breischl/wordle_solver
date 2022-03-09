@@ -1,10 +1,10 @@
-import stats
+import stats as s
 import wordle_dict as wd
 import wordle as w
 
 
-class PositionalFrequencyStrategy:
-    '''A strategy based on choosing the word with the highest-frequency letters in each position'''
+class GlobalFrequencyStrategy:
+    '''A strategy based on choosing the word with the most high-frequency letters regardless of position'''
 
     def __init__(self, dictionary: list[str] = wd.load_dictionary, allow_dup_letters_after_guess: int = 2):
         self.words = dictionary
@@ -29,7 +29,7 @@ class PositionalFrequencyStrategy:
         return self._find_highest_scoring_words(self._duplicate_letters_allowed())[0][0]
 
     def _find_highest_scoring_words(self, allow_dup_letters: bool) -> tuple[list[str], int]:
-        position_counts = stats.count_letters_by_position(self.words)
+        letter_counts = dict(s.count_letter_frequency_no_dup(self.words))
 
         # TODO: I bet itertools has a cleaner way to do this
         best_score = 0
@@ -39,8 +39,7 @@ class PositionalFrequencyStrategy:
             if not allow_dup_letters and len(set(word)) != len(word):
                 continue
 
-            frequencies = stats.extract_letter_counts_for_word(
-                position_counts, word)
+            frequencies = {letter_counts[letter] for letter in set(word)}
             score = sum(frequencies)
             if score > best_score:
                 best_words = [word]

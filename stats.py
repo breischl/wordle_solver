@@ -48,7 +48,7 @@ def extract_letter_counts_for_word(position_counts: list[dict], word: str) -> li
     return frequencies
 
 
-def letter_count(wordlist: list, extractor: callable) -> list:
+def letter_count(wordlist: list, extractor: callable) -> list[tuple[str, int]]:
     '''Extract the letter(s) of each word in the wordlist using the given function, then count occurrences of those letters
 
     Returns: A list of tuples (letter, count) sorted by descending value of count
@@ -64,15 +64,15 @@ def letter_count(wordlist: list, extractor: callable) -> list:
     return sorted_lcount
 
 
-def count_first_letters(wordlist: list) -> list:
+def count_first_letters(wordlist: list) -> list[tuple[str, int]]:
     return letter_count(wordlist, lambda word: [word[0]])
 
 
-def count_letter_frequency(wordlist: list) -> list:
+def count_letter_frequency(wordlist: list) -> list[tuple[str, int]]:
     return letter_count(wordlist, lambda word: word)
 
 
-def count_letter_frequency_no_dup(wordlist: list) -> list:
+def count_letter_frequency_no_dup(wordlist: list) -> list[tuple[str, int]]:
     return letter_count(wordlist, lambda word: set(word))
 
 
