@@ -52,7 +52,7 @@ def find_highest_scoring_word(wordlist: list, allow_dup_letters: bool) -> str:
     return find_highest_scoring_words(wordlist, allow_dup_letters)[0][0]
 
 
-def find_highest_scoring_words(wordlist: list, allow_dup_letters: bool) -> list[tuple[str, int]]:
+def find_highest_scoring_words(wordlist: list, allow_dup_letters: bool) -> tuple[list[str], int]:
     position_counts = count_letters_by_position(wordlist)
 
     # TODO: I bet itertools has a cleaner way to do this
