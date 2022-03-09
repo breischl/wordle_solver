@@ -2,9 +2,9 @@ import random
 import stats
 from wordle_dict import *
 
-WRONG = -1
-MISPLACED = 0
-CORRECT = 1
+WRONG = "w"
+MISPLACED = "m"
+CORRECT = "c"
 
 
 def check_word(solution: str, guess: str) -> tuple:
@@ -56,6 +56,10 @@ def is_possible_solution(word: str, guess: str, letter_scores: list) -> bool:
     return True
 
 
+def remove_non_matching_words(wordlist: list[str], guess: str, letter_scores: list[str]) -> list[str]:
+    return [w for w in wordlist if is_possible_solution(w, guess, letter_scores)]
+
+
 if __name__ == "__main__":
     words = load_dictionary()
     solution = random.choice(words)
@@ -75,6 +79,6 @@ if __name__ == "__main__":
             print(f"'{guess_word}' is correct, I win!")
             break
 
-        print(f"'{guess_word}' was wrong, letter scores are: {letter_scores}")
-        words = [w for w in words if is_possible_solution(
-            w, guess_word, letter_scores)]
+        letter_score_str = str.join("", letter_scores)
+        print(f"'{guess_word}' was wrong, letter scores are: {letter_score_str}")
+        words = remove_non_matching_words(words, guess_word, letter_scores)

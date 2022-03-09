@@ -73,7 +73,7 @@ def find_highest_scoring_words(wordlist: list, allow_dup_letters: bool) -> list[
 
     if len(best_words) > 0:
         return (best_words, best_score)
-    elif allow_dup_letters:
+    elif not allow_dup_letters:
         return find_highest_scoring_words(wordlist, True)
     else:
         # Shouldn't really happen unless the list is empty anyway
@@ -125,10 +125,10 @@ def plot_letter_histogram(lcounts: list, name: str) -> None:
 
 if __name__ == "__main__":
     # plot_letter_histogram(count_first_letters(words), "First letters")
-    # plot_letter_histogram(count_letter_frequency(words), "All letters")
+    plot_letter_histogram(count_letter_frequency(words), "All letters")
     # plot_letter_histogram(count_letter_frequency_no_dup(
     #     words), "All letters deduped")
-    # plt.show()
+    plt.show()
 
     letter_pos_counts = count_letters_by_position(words)
     ranked_letters = rank_letters_by_position(letter_pos_counts, top_n=5)
