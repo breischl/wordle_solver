@@ -13,9 +13,9 @@ def load_dictionary() -> list:
 def cleanse_dictionary() -> None:
     '''Read in the dictionary file, remove invalid words, and write the result back'''
     with open(DICTIONARY_FILE, mode="rt") as word_file:
-        valid_words = [w
+        valid_words = {w
                        for w in word_file.read().splitlines()
-                       if is_valid_word(w)]
+                       if is_valid_word(w)}
 
     save_dictionary(valid_words)
 
