@@ -56,8 +56,8 @@ def print_summary_stats(test_results: tuple[int, int, list[int]], strat_name: st
 
 
 if __name__ == "__main__":
-    for duplicates in range(0, 3):
-        for repetition in range(0, 3):
+    for duplicates in range(1, 4):
+        for repetition in range(1, 4):
             # print(
             #     f"Checking PositionalFrequencyStrategy, duplicates={duplicates}, repetition={repetition}")
             results = check_strategy(
@@ -67,8 +67,8 @@ if __name__ == "__main__":
             print_summary_stats(
                 results, f"Positional Frequency Strategy, double letters after {duplicates} guesses, repetition after {repetition} guesses")
 
-    for duplicates in range(0, 2):
-        for repetition in range(0, 2):
+    for duplicates in range(1, 4):
+        for repetition in range(1, 4):
             # print(
             #     f"Checking GlobalFrequencyStrategy, duplicates={duplicates}, repetition={repetition}")
             results = check_strategy(
