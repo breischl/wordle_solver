@@ -101,6 +101,3 @@ if __name__ == "__main__":
     letter_pos_counts = count_letters_by_position(words)
     ranked_letters = rank_letters_by_position(letter_pos_counts, top_n=5)
     print(ranked_letters)
-
-    print(find_highest_scoring_words(words, allow_dup_letters=True))
-    print(find_highest_scoring_words(words, allow_dup_letters=False))

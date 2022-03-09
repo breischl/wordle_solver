@@ -1,9 +1,9 @@
 import unittest
 import positional_frequency_strategy as pfs
 import wordle_dict as wd
-from wordle import WRONG
-from wordle import MISPLACED
-from wordle import CORRECT
+from wordle_strategy import WRONG
+from wordle_strategy import MISPLACED
+from wordle_strategy import CORRECT
 
 
 class TestPositionalFrequencyStrategy(unittest.TestCase):

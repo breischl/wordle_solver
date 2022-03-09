@@ -1,16 +1,16 @@
 import fileinput as fi
-import wordle_dict as wordle
+import wordle_dict as wd
 import wordle as wordle
 import stats as stats
+import positional_frequency_strategy as pfs
 
-words = wordle.load_dictionary()
+strat = pfs.PositionalFrequencyStrategy()
 stdin = fi.input()
-print(f"Loaded dictionary of {len(words)} words")
 
 guess_num = 1
 while guess_num < 7:
-    suggestion = stats.find_highest_scoring_word(words, (guess_num > 3))
-    
+    suggestion = strat.next_guess()
+
     print(f"Guess {guess_num} - I suggest '{suggestion}'")
     print(f"What did you guess? (return if you used my suggestion)")
     guess = stdin.readline().rstrip()
@@ -34,6 +34,6 @@ while guess_num < 7:
         print(f"Woohoo, congrats!")
         break
     else:
-        words = wordle.remove_non_matching_words(words, guess, list(result))
+        words = strat.accept_result(list(result), guess=guess)
 
     guess_num += 1
