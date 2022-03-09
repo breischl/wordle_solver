@@ -32,9 +32,12 @@ class WordleStrategy:
         else:
             next_guess = self._choose_next_word(
                 self._duplicate_letters_allowed())
+
+            # We exhausted the dictionary already, abandon the "no repetition" approach
             if next_guess is None and self.shadow_dictionary:
                 self.words = self.shadow_dictionary
                 self.shadow_dictionary = []
+                self.allow_letter_repetition_after_guess = 0
                 next_guess = self.next_guess()
 
         self.last_guess = next_guess

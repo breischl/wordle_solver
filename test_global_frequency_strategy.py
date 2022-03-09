@@ -33,3 +33,22 @@ class TestGlobalFrequencyStrategy(unittest.TestCase):
         the_best_words = self.strat._find_highest_scoring_words(True)
         self.assertEqual(len(the_best_words[0]), 1, "List should be non-empty")
         self.assertEqual(the_best_words[0][0], "sweet")
+
+    def test_cigar(self):
+        self.strat = gfs.GlobalFrequencyStrategy(wd.load_dictionary(), 1, 4)
+
+        guess = self.strat.next_guess()
+        self.assertEqual("aeros", guess)
+        self.strat.accept_result(list("mwmww"))
+
+        guess = self.strat.next_guess()
+        self.assertEqual("unity", guess)
+        self.strat.accept_result(list("wwmww"))
+
+        guess = self.strat.next_guess()
+        self.assertEqual("brail", guess)
+        self.strat.accept_result(list("wmmmw"))
+
+        guess = self.strat.next_guess()
+        # self.assertEqual("brail", guess)
+        # self.strat.accept_result(list("wmmmw"))

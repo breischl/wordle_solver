@@ -36,6 +36,11 @@ def check_strategy(strat_builder: callable) -> tuple[int, int, list[int]]:
 def try_solve_word(strat: WordleStrategy, solution: str):
     for guess_num in range(1, 7):
         guess = strat.next_guess()
+        if not guess:
+            print(
+                f"Bad guess for solution {solution}, guess number {guess_num}")
+            quit()
+
         (is_correct, result) = w.check_word(solution, guess)
         # print(
         #     f"solution {solution}, guess_num {guess_num}, guess {guess}, result {result}")
