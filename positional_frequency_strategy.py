@@ -7,11 +7,10 @@ class PositionalFrequencyStrategy(ws.WordleStrategy):
 
     def _choose_next_word(self, allow_dup_letters: bool) -> str:
         (words, score) = self._find_highest_scoring_words(allow_dup_letters)
-        # if len(words) > 1:
-        # print(f"Potential words: {words}")
-        # words.sort()
-
-        return words[0]
+        if(words):
+            return words[0]
+        else:
+            return None
 
     def _find_highest_scoring_words(self, allow_dup_letters: bool) -> tuple[list[str], int]:
         position_counts = stats.count_letters_by_position(self.words)
@@ -38,5 +37,5 @@ class PositionalFrequencyStrategy(ws.WordleStrategy):
         elif not allow_dup_letters:
             return self._find_highest_scoring_words(True)
         else:
-            # Shouldn't really happen unless the list is empty anyway
-            return (self.words[0], 0)
+            return ([], None)
+            # return (self.words[0], 0)

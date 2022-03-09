@@ -8,7 +8,11 @@ class GlobalFrequencyStrategy(ws.WordleStrategy):
     '''A strategy based on choosing the word with the most high-frequency letters regardless of position'''
 
     def _choose_next_word(self, allow_dup_letters: bool) -> str:
-        return self._find_highest_scoring_words(allow_dup_letters)[0][0]
+        (words, score) = self._find_highest_scoring_words(allow_dup_letters)
+        if(words):
+            return words[0]
+        else:
+            return None
 
     def _find_highest_scoring_words(self, allow_dup_letters: bool) -> tuple[list[str], int]:
         letter_counts = dict(s.count_letter_frequency_no_dup(self.words))
@@ -34,5 +38,4 @@ class GlobalFrequencyStrategy(ws.WordleStrategy):
         elif not allow_dup_letters:
             return self._find_highest_scoring_words(True)
         else:
-            # Shouldn't really happen unless the list is empty anyway
-            return (self.words[0], 0)
+            return ([], None)
