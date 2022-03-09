@@ -40,9 +40,9 @@ if __name__ == "__main__":
                         help="Optionally specify the solution word for the computer to guess")
     parser.add_argument("--strategy", type=str, default="PositionalFrequency",
                         choices=["PositionalFrequency", "GlobalFrequency"])
-    parser.add_argument("-d", "--duplicates", default=3, type=int,
+    parser.add_argument("-d", "--duplicates", default=5, type=int,
                         help="Number of guesses before suggesting words containing the same letter more than once")
-    parser.add_argument("-r", "--repetition", default=3, type=int,
+    parser.add_argument("-r", "--repetition", default=5, type=int,
                         help="Number of guesses before suggesting words containing previously-guessed letters. ie, all letters suggested will be new until this many guesses.")
     args = parser.parse_args()
 

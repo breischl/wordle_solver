@@ -36,4 +36,6 @@ The script has a dictionary of 5-letter words. For each of the five letter posit
 
 The feedback is used to eliminate any words that could not possibly be a solution. Then the we repeat the entire process with the now-smaller dictionary. 
 
-In order to winnow out incorrect letters quickly, the first two guesses are not allowed to have the same letter twice in the same word. Also the second guess is not allowed to repeat any letters from the first guess. For guess 3 and later, it will choose the most likely word as already outlined. 
+In order to winnow out incorrect letters quickly, the first few guesses are not allowed to have the same letter twice in the same word, and also are not allowed to reuse letters across words (ie, each letter of each word will be unique) provided the dictionary is not exhausted. These are tweakable commandline parameters to the scripts - testing showed that `5` is the best value for each, and is therefore the default. 
+
+[This article](https://towardsdatascience.com/a-frequency-analysis-on-wordle-9c5778283363) outlines a similar-ish approach, though it's only applied for the first guess and does some different calculations to normalize the metric. 
