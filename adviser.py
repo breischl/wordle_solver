@@ -1,7 +1,17 @@
+from ast import Store
 import fileinput as fi
 import positional_frequency_strategy as pfs
+import argparse as arg
 
-strat = pfs.PositionalFrequencyStrategy()
+parser = arg.ArgumentParser(description="Advises you how to beat Wordle")
+parser.add_argument("-d", "--duplicates", nargs=1, default=3, type=int,
+                    help="Number of guesses before suggesting words containing the same letter more than once")
+parser.add_argument("-r", "--repetition", nargs=1, default=3, type=int,
+                    help="Number of guesses before suggesting words containing previously-guessed letters. ie, all letters suggested will be new until this many guesses.")
+args = parser.parse_args()
+
+strat = pfs.PositionalFrequencyStrategy(
+    allow_dup_letters_after_guess=args.duplicates, allow_letter_repetition_after_guess=args.repetition)
 stdin = fi.input()
 
 guess_num = 1

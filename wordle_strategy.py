@@ -12,7 +12,7 @@ class WordleStrategy:
         Also `allow_letter_repetition_after_guess`, which will force guessing new letters early on, even if some letters were correct. It basically treats "correct" letters like "wrong" letters, until later guesses. 
     '''
 
-    def __init__(self, dictionary: list[str] = wd.load_dictionary, allow_dup_letters_after_guess: int = 2, allow_letter_repetition_after_guess: int = 0):
+    def __init__(self, dictionary: list[str] = wd.load_dictionary(), allow_dup_letters_after_guess: int = 2, allow_letter_repetition_after_guess: int = 0):
         self.words = dictionary
         self.allow_dup_letters_after_guess = allow_dup_letters_after_guess
         self.allow_letter_repetition_after_guess = allow_letter_repetition_after_guess

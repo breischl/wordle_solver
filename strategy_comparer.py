@@ -2,6 +2,7 @@ from statistics import mean
 import wordle_dict as wd
 import wordle as w
 import numpy as np
+import argparse as arg
 from wordle_strategy import WordleStrategy
 import positional_frequency_strategy as pfs
 import global_frequency_strategy as gfs
@@ -60,23 +61,36 @@ def print_summary_stats(test_results: tuple[int, int, list[int]], strat_name: st
     print(f'missed words: {missed_words}')
 
 
-if __name__ == "__main__":
-    for duplicates in range(1, 4):
-        for repetition in range(1, 4):
-            # print(
-            #     f"Checking PositionalFrequencyStrategy, duplicates={duplicates}, repetition={repetition}")
-            results = check_strategy(
-                lambda w: pfs.PositionalFrequencyStrategy(dictionary=w,
-                                                          allow_dup_letters_after_guess=duplicates,
-                                                          allow_letter_repetition_after_guess=repetition))
-            print_summary_stats(
-                results, f"Positional Frequency Strategy, double letters after {duplicates} guesses, repetition after {repetition} guesses")
+parser = arg.ArgumentParser(
+    description="Run the given strategy & settings against all known Wordle solutions")
+parser.add_argument("--strategies", type=str, default="All",
+                    choices=["PositionalFrequency", "GlobalFrequency", "All"])
+parser.add_argument("-dn", "--duplicates_min", default=1, type=int,
+                    help="Min number of guesses before suggesting words containing the same letter more than once")
+parser.add_argument("-dx", "--duplicates_max", default=4, type=int,
+                    help="Max number of guesses before suggesting words containing the same letter more than once")
+parser.add_argument("-rn", "--repetition_min", default=1, type=int,
+                    help="Min number of guesses before suggesting words containing previously-guessed letters. ie, all letters suggested will be new until this many guesses.")
+parser.add_argument("-rx", "--repetition_max", default=1, type=int,
+                    help="Max number of guesses before suggesting words containing previously-guessed letters. ie, all letters suggested will be new until this many guesses.")
+args = parser.parse_args()
 
-    for duplicates in range(1, 4):
-        for repetition in range(1, 4):
-            # print(
-            #     f"Checking GlobalFrequencyStrategy, duplicates={duplicates}, repetition={repetition}")
-            results = check_strategy(
-                lambda w: gfs.GlobalFrequencyStrategy(w, duplicates, repetition))
+strategies = []
+if "all" in args.strategies:
+    args.strategies = ["PositionalFrequency", "GlobalFrequency"]
+if "PositionalFrequency" in args.strategies:
+    strategies.append(("Positional Frequency", lambda w: pfs.PositionalFrequencyStrategy(dictionary=w,
+                                                                                         allow_dup_letters_after_guess=duplicates,
+                                                                                         allow_letter_repetition_after_guess=repetition)))
+if "GlobalFrequency" in args.strategies:
+    strategies.append(("Global Frequency", lambda w: gfs.GlobalFrequencyStrategy(dictionary=w,
+                                                                                 allow_dup_letters_after_guess=duplicates,
+                                                                                 allow_letter_repetition_after_guess=repetition)))
+
+
+for (strat_name, strat_builder) in strategies:
+    for duplicates in range(args.duplicates_min, args.duplicates_max + 1):
+        for repetition in range(args.repetition_min, args.repetition_max + 1):
+            results = check_strategy(strat_builder)
             print_summary_stats(
-                results, f"Global Frequency Strategy, double letters after {duplicates} guesses, repetition after {repetition} guesses")
+                results, f"{strat_name} Strategy, double letters after {duplicates} guesses, repetition after {repetition} guesses")
