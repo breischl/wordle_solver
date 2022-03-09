@@ -10,6 +10,7 @@ def load_dictionary() -> list[str]:
     '''
     with open(DICTIONARY_FILE, mode="rt") as word_file:
         words = [w for w in word_file.read().splitlines()]
+
     return words
 
 
@@ -20,7 +21,8 @@ def cleanse_dictionary() -> None:
                        for w in word_file.read().splitlines()
                        if is_valid_word(w)}
 
-    save_dictionary(valid_words)
+    sorted_word_list = sorted(valid_words)
+    save_dictionary(sorted_word_list)
 
 
 def save_dictionary(words: list[str]) -> None:
@@ -44,3 +46,7 @@ def load_oracle() -> list[str]:
     with open(ORACLE_FILE, mode="rt") as word_file:
         words = [w for w in word_file.read().splitlines()]
     return words
+
+
+if __name__ == "__main__":
+    cleanse_dictionary()

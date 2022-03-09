@@ -7,9 +7,9 @@ class PositionalFrequencyStrategy(ws.WordleStrategy):
 
     def _choose_next_word(self, allow_dup_letters: bool) -> str:
         (words, score) = self._find_highest_scoring_words(allow_dup_letters)
-        if len(words) > 1:
-            words.sort()
-            # print(f"Potential words: {words}")
+        # if len(words) > 1:
+        # print(f"Potential words: {words}")
+        # words.sort()
 
         return words[0]
 

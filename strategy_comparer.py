@@ -14,6 +14,7 @@ def check_strategy(strat_builder: callable) -> tuple[int, int, list[int]]:
     wins = 0
     losses = 0
     guess_counts = []
+    misses = []
 
     for solution in oracle:
         # print(f"Oracle contains {len(oracle)} words, dictionary contains {len(words)} words")
@@ -25,9 +26,10 @@ def check_strategy(strat_builder: callable) -> tuple[int, int, list[int]]:
             guess_counts.append(num_guesses)
         else:
             losses += 1
+            misses.append(solution)
         # print(f"Took {num_guesses} to solve '{solution}'")
 
-    return (wins, losses, guess_counts)
+    return (wins, losses, guess_counts, sorted(misses))
 
 
 def try_solve_word(strat: WordleStrategy, solution: str):
@@ -46,13 +48,16 @@ def try_solve_word(strat: WordleStrategy, solution: str):
 
 
 def print_summary_stats(test_results: tuple[int, int, list[int]], strat_name: str) -> None:
-    (wins, losses, guess_counts) = test_results
+    (wins, losses, guess_counts, missed_words) = test_results
     win_pct = wins / (wins + losses)
     mean_guesses = np.mean(guess_counts, dtype=np.float32)
     median_guesses = np.mean(guess_counts, dtype=np.float32)
 
+    print(f'{strat_name}')
     print(
-        f'{strat_name}:\nwin rate: {win_pct:0.2%},   mean guesses: {mean_guesses:#0.2f}, median guesses: {median_guesses:#0.2f}\n')
+        f'win rate: {win_pct:0.2%}, mean guesses: {mean_guesses:#0.2f}, median guesses: {median_guesses:#0.2f}')
+    print(f'wins: {wins}, losses: {losses}\n')
+    print(f'missed words: {missed_words}')
 
 
 if __name__ == "__main__":
