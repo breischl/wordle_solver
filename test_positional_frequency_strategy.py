@@ -33,3 +33,16 @@ class TestPositionalFrequencyStrategy(unittest.TestCase):
         the_best_words = self.strat._find_highest_scoring_words(True)
         self.assertEqual(len(the_best_words[0]), 1, "List should be non-empty")
         self.assertEqual(the_best_words[0][0], "sweet")
+
+    def test_sissy(self):
+        words = wd.load_dictionary()
+        print(f"dictionary contains {len(words)} words")
+        mystrat = pfs.PositionalFrequencyStrategy(
+            dictionary=words,
+            allow_dup_letters_after_guess=0,
+            allow_letter_repetition_after_guess=2)
+
+        self.assertEqual("sores", mystrat.next_guess())
+        mystrat.accept_result(list("cwwwm"))
+
+        mystrat.next_guess()

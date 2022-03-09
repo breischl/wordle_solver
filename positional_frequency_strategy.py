@@ -6,7 +6,12 @@ class PositionalFrequencyStrategy(ws.WordleStrategy):
     '''A strategy based on choosing the word with the highest-frequency letters in each position'''
 
     def _choose_next_word(self, allow_dup_letters: bool) -> str:
-        return self._find_highest_scoring_words(allow_dup_letters)[0][0]
+        (words, score) = self._find_highest_scoring_words(allow_dup_letters)
+        if len(words) > 1:
+            words.sort()
+            # print(f"Potential words: {words}")
+
+        return words[0]
 
     def _find_highest_scoring_words(self, allow_dup_letters: bool) -> tuple[list[str], int]:
         position_counts = stats.count_letters_by_position(self.words)
