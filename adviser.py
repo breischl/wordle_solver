@@ -1,7 +1,4 @@
 import fileinput as fi
-import wordle_dict as wd
-import wordle as wordle
-import stats as stats
 import positional_frequency_strategy as pfs
 
 strat = pfs.PositionalFrequencyStrategy()
