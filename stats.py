@@ -1,8 +1,8 @@
-import wordle_dict as wordle
+import wordle_dict as wd
 import numpy as np
 import matplotlib.pyplot as plt
 
-words = wordle.load_dictionary()
+words = wd.load_dictionary()
 letters = [chr(l) for l in range(ord('a'), ord('z')+1)]
 
 

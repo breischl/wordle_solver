@@ -1,4 +1,4 @@
-import wordle_dict as wordle
+import wordle_dict as wd
 import unittest
 from unittest import TestCase
 
@@ -6,7 +6,7 @@ from unittest import TestCase
 class TestWordleDict(unittest.TestCase):
 
     def setUp(self) -> None:
-        self.words = wordle.load_dictionary()
+        self.words = wd.load_dictionary()
         return super().setUp()
 
     def test_dictionary_loaded(self):
@@ -14,10 +14,10 @@ class TestWordleDict(unittest.TestCase):
         self.assertTrue("serai" in self.words)
 
     def test_is_valid_word(self):
-        self.assertTrue(wordle.is_valid_word("serai"))
-        self.assertTrue(wordle.is_valid_word("bonds"))
+        self.assertTrue(wd.is_valid_word("serai"))
+        self.assertTrue(wd.is_valid_word("bonds"))
 
-        self.assertFalse(wordle.is_valid_word("1name"))
-        self.assertFalse(wordle.is_valid_word("bonded"))
-        self.assertFalse(wordle.is_valid_word("abba"))
-        self.assertFalse(wordle.is_valid_word("abba\n"))
+        self.assertFalse(wd.is_valid_word("1name"))
+        self.assertFalse(wd.is_valid_word("bonded"))
+        self.assertFalse(wd.is_valid_word("abba"))
+        self.assertFalse(wd.is_valid_word("abba\n"))

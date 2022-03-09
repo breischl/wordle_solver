@@ -9,11 +9,11 @@ from wordle_strategy import MISPLACED
 from wordle_strategy import CORRECT
 
 
-def check_word(solution: str, guess: str) -> tuple:
+def check_word(solution: str, guess: str) -> tuple[bool, list[str]]:
     '''Check whether a given guess matches the expected solution, and return that along with match scores for each letter. 
 
 
-    Returns: (is_correct : bool, letter_scores : list[int])
+    Returns: (is_correct : bool, letter_scores : list[str])
     '''
     if solution == guess:
         return (True, [CORRECT for x in range(0, 5)])
