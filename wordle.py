@@ -1,6 +1,9 @@
+'''Functions for manipulating the in-memory dictionary and checking word results
+'''
 import random
 import stats
 from wordle_dict import *
+import positional_frequency_strategy as pfs
 
 WRONG = "w"
 MISPLACED = "m"
@@ -63,16 +66,16 @@ def remove_non_matching_words(wordlist: list[str], guess: str, letter_scores: li
 if __name__ == "__main__":
     words = load_dictionary()
     solution = random.choice(words)
+    strat = pfs.PositionalFrequencyStrategy(words.copy())
+
     print(f"Solution is '{solution}'")
 
     for guess_num in range(1, 7):
-        print(f"\nI can think of {len(words)} possible words")
+        print(f"\nI can think of {len(strat.words)} possible words")
 
-        allow_dup = (guess_num > 3)
-        best_guesses = stats.find_highest_scoring_words(words, allow_dup)
+        guess_word = strat.next_guess()
+        print(f"I'll guess '{guess_word}'")
 
-        print(f"Best words are {best_guesses}, I'll use the first one")
-        guess_word = best_guesses[0][0]
         (is_correct, letter_scores) = check_word(solution, guess_word)
 
         if is_correct:
@@ -81,4 +84,5 @@ if __name__ == "__main__":
 
         letter_score_str = str.join("", letter_scores)
         print(f"'{guess_word}' was wrong, letter scores are: {letter_score_str}")
-        words = remove_non_matching_words(words, guess_word, letter_scores)
+
+        strat.accept_result(letter_scores)

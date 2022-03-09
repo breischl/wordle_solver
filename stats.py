@@ -48,38 +48,6 @@ def extract_letter_counts_for_word(position_counts: list[dict], word: str) -> li
     return frequencies
 
 
-def find_highest_scoring_word(wordlist: list, allow_dup_letters: bool) -> str:
-    return find_highest_scoring_words(wordlist, allow_dup_letters)[0][0]
-
-
-def find_highest_scoring_words(wordlist: list, allow_dup_letters: bool) -> tuple[list[str], int]:
-    position_counts = count_letters_by_position(wordlist)
-
-    # TODO: I bet itertools has a cleaner way to do this
-    best_score = 0
-    best_words = []
-
-    for word in wordlist:
-        if not allow_dup_letters and len(set(word)) != len(word):
-            continue
-
-        frequencies = extract_letter_counts_for_word(position_counts, word)
-        score = sum(frequencies)
-        if score > best_score:
-            best_words = [word]
-            best_score = score
-        elif score == best_score:
-            best_words.append(word)
-
-    if len(best_words) > 0:
-        return (best_words, best_score)
-    elif not allow_dup_letters:
-        return find_highest_scoring_words(wordlist, True)
-    else:
-        # Shouldn't really happen unless the list is empty anyway
-        return (wordlist[0], 0)
-
-
 def letter_count(wordlist: list, extractor: callable) -> list:
     '''Extract the letter(s) of each word in the wordlist using the given function, then count occurrences of those letters
 

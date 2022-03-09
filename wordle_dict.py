@@ -1,3 +1,5 @@
+'''Functions to handle loading and saving the dictionary from files
+'''
 DICTIONARY_FILE = 'words_alpha.txt'
 
 
