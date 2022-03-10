@@ -20,9 +20,7 @@ def check_word(solution: str, guess: str) -> tuple[bool, list[str]]:
         return (True, [CORRECT for x in range(0, 5)])
 
     letter_scores = []
-    for idx in range(0, len(guess)):
-        guess_letter = guess[idx]
-        correct_letter = solution[idx]
+    for (guess_letter, correct_letter) in zip(guess, solution):
         if guess_letter == correct_letter:
             letter_scores.append(CORRECT)
         elif guess_letter in solution:

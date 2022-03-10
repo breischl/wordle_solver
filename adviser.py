@@ -22,7 +22,7 @@ while guess_num < 7:
     print(f"What did you guess? (return if you used my suggestion)")
     guess = stdin.readline().rstrip()
 
-    if len(guess) == 0:
+    if not guess:
         guess = suggestion
 
     print(f"What was the result? wrong=>w, misplaced=>m, correct=>c, invalid word=>i, finished=>f")

@@ -32,7 +32,7 @@ class PositionalFrequencyStrategy(ws.WordleStrategy):
             elif score == best_score:
                 best_words.append(word)
 
-        if len(best_words) > 0:
+        if best_words:
             return (best_words, best_score)
         elif not allow_dup_letters:
             return self._find_highest_scoring_words(True)

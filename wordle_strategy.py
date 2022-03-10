@@ -69,10 +69,7 @@ class WordleStrategy:
 def is_possible_solution(word: str, guess: str, letter_scores: list) -> bool:
     '''Check if a given word could possibly be the solution, given the results of a previous guess.
     '''
-    for idx in range(0, len(guess)):
-        l_word = word[idx]
-        l_guess = guess[idx]
-        score = letter_scores[idx]
+    for (l_word, l_guess, score) in zip(word, guess, letter_scores):
         # print("{0}, guess={1}, score={2}, word={3}".format(
         #     idx, l_guess, score, l_word))
 
