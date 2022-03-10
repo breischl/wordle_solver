@@ -18,6 +18,7 @@ class GlobalFrequencyStrategy(ws.WordleStrategy):
         letter_counts = dict(s.count_letter_frequency_no_dup(self.words))
 
         # TODO: I bet itertools has a cleaner way to do this
+        # Seems like `max()` could do it as well, but I'm not sure how to write the `key` function cleanly
         best_score = 0
         best_words = []
 

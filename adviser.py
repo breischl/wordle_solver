@@ -1,5 +1,3 @@
-from ast import Store
-import fileinput as fi
 import positional_frequency_strategy as pfs
 import argparse as arg
 
@@ -12,21 +10,19 @@ args = parser.parse_args()
 
 strat = pfs.PositionalFrequencyStrategy(
     allow_dup_letters_after_guess=args.duplicates, allow_letter_repetition_after_guess=args.repetition)
-stdin = fi.input()
 
 guess_num = 1
 while guess_num < 7:
     suggestion = strat.next_guess()
 
     print(f"Guess {guess_num} - I suggest '{suggestion}'")
-    print(f"What did you guess? (return if you used my suggestion)")
-    guess = stdin.readline().rstrip()
+    guess = input("What did you guess? (return if you used my suggestion)")
 
     if not guess:
         guess = suggestion
 
-    print(f"What was the result? wrong=>w, misplaced=>m, correct=>c, invalid word=>i, finished=>f")
-    result = stdin.readline().rstrip()
+    result = input(
+        "What was the result? wrong=>w, misplaced=>m, correct=>c, invalid word=>i, finished=>f\n")
 
     if len(result) == 1:
         if result[0] == "f":
