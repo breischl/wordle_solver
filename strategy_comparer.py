@@ -4,10 +4,8 @@ import wordle as w
 import numpy as np
 import argparse as arg
 from wordle_strategy import WordleStrategy
-import positional_frequency_strategy as pfs
-import global_frequency_strategy as gfs
-
-words = wd.load_dictionary()
+import positional_frequency_scorer as pfs
+import global_frequency_scorer as gfs
 
 
 def check_strategy(strat_builder: callable) -> tuple[int, int, list[int]]:
@@ -19,8 +17,7 @@ def check_strategy(strat_builder: callable) -> tuple[int, int, list[int]]:
 
     for solution in oracle:
         # print(f"Oracle contains {len(oracle)} words, dictionary contains {len(words)} words")
-        strat = strat_builder(words.copy())
-        num_guesses = try_solve_word(strat, solution)
+        num_guesses = try_solve_word(strat_builder(), solution)
 
         if num_guesses < 7:
             wins += 1
@@ -68,34 +65,33 @@ def print_summary_stats(test_results: tuple[int, int, list[int]], strat_name: st
 
 parser = arg.ArgumentParser(
     description="Run the given strategy & settings against all known Wordle solutions")
-parser.add_argument("--strategies", type=str, default="All",
+parser.add_argument("-w", "--wordscorer", type=str, default="All",
                     choices=["PositionalFrequency", "GlobalFrequency", "All"])
-parser.add_argument("-dn", "--duplicates_min", default=1, type=int,
-                    help="Min number of guesses before suggesting words containing the same letter more than once")
-parser.add_argument("-dx", "--duplicates_max", default=4, type=int,
-                    help="Max number of guesses before suggesting words containing the same letter more than once")
-parser.add_argument("-rn", "--repetition_min", default=1, type=int,
-                    help="Min number of guesses before suggesting words containing previously-guessed letters. ie, all letters suggested will be new until this many guesses.")
-parser.add_argument("-rx", "--repetition_max", default=1, type=int,
-                    help="Max number of guesses before suggesting words containing previously-guessed letters. ie, all letters suggested will be new until this many guesses.")
+parser.add_argument("-en", "--exploration_min", default=3, type=int,
+                    help="Min number of guesses to stay in exploration mode")
+parser.add_argument("-ex", "--exploration_max", default=5, type=int,
+                    help="Max number of guesses to stay in exploration mode")
 args = parser.parse_args()
 
-strategies = []
-if "all" in args.strategies:
-    args.strategies = ["PositionalFrequency", "GlobalFrequency"]
-if "PositionalFrequency" in args.strategies:
-    strategies.append(("Positional Frequency", lambda w: pfs.PositionalFrequencyStrategy(dictionary=w,
-                                                                                         allow_dup_letters_after_guess=duplicates,
-                                                                                         allow_letter_repetition_after_guess=repetition)))
-if "GlobalFrequency" in args.strategies:
-    strategies.append(("Global Frequency", lambda w: gfs.GlobalFrequencyStrategy(dictionary=w,
-                                                                                 allow_dup_letters_after_guess=duplicates,
-                                                                                 allow_letter_repetition_after_guess=repetition)))
+scorers = []
+if "All" in args.wordscorer:
+    args.wordscorer = ["PositionalFrequency", "GlobalFrequency"]
+
+if "PositionalFrequency" in args.wordscorer:
+    scorers.append(
+        ("Positional Frequency", pfs.PositionalFrequencyWordScorer()))
+if "GlobalFrequency" in args.wordscorer:
+    scorers.append(("Global Frequency", gfs.GlobalFrequencyWordScorer()))
 
 
-for (strat_name, strat_builder) in strategies:
-    for duplicates in range(args.duplicates_min, args.duplicates_max + 1):
-        for repetition in range(args.repetition_min, args.repetition_max + 1):
-            results = check_strategy(strat_builder)
-            print_summary_stats(
-                results, f"{strat_name} Strategy, double letters after {duplicates} guesses, repetition after {repetition} guesses")
+words = wd.load_dictionary()
+
+for (scorer_name, scorer) in scorers:
+    for explore_guesses in range(args.exploration_min, args.exploration_max + 1):
+        settings = {
+            "max_exploration_guesses": explore_guesses
+        }
+        results = check_strategy(lambda: WordleStrategy(
+            word_scorer=scorer, exploration_settings=settings, dictionary=words.copy()))
+        print_summary_stats(
+            results, f"{scorer_name} word scorer, exploration mode for {explore_guesses} guesses")

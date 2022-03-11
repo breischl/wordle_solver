@@ -6,7 +6,7 @@ This is mostly a learning exercise for me - it's my first non-trivial Python scr
 ## Usage
 `python adviser.py` will launch a simple console app that will advise you on what to guess, and accept results to update future guesses. For example:
 ```
-ython adviser.py
+python adviser.py
 Guess 1 - I suggest 'cares'
 What did you guess? (return if you used my suggestion)
 cares

@@ -1,12 +1,14 @@
 import unittest
 import wordle_strategy as ws
-from wordle_strategy import WRONG
+import positional_frequency_scorer as pfs
+from wordle_strategy import WRONG, WordleStrategy
 from wordle_strategy import MISPLACED
 from wordle_strategy import CORRECT
 
 
 class TestWordleStrategy(unittest.TestCase):
     def setUp(self) -> None:
+        self.strat = WordleStrategy(pfs.PositionalFrequencyWordScorer())
         return super().setUp()
 
     def test_is_possible_solution(self):
@@ -18,6 +20,13 @@ class TestWordleStrategy(unittest.TestCase):
 
         self.assertTrue(ws.is_possible_solution(word="tumor", guess="tummr", letter_scores=[
             CORRECT, CORRECT, CORRECT, MISPLACED, CORRECT]))
+
+    def test_accepts_feedback(self):
+        initial_size = len(self.strat.precision_dictionary)
+        self.strat.accept_result(
+            [WRONG, WRONG, MISPLACED, CORRECT, CORRECT], "arose")
+        new_size = len(self.strat.precision_dictionary)
+        self.assertLess(new_size, initial_size)
 
     # def test_handles_repetition(self):
     #     strat = ws.WordleStrategy(
