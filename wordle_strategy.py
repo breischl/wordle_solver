@@ -22,13 +22,10 @@ class WordleStrategy:
         self.word_scorer = word_scorer
         self.last_guess = None
         self.guess_num = 1
-        # Letters that we know are in the word somewhere, ie we got a "misplaced" or "correct" on them
-        self.known_letters = set()
         self.exploration_mode = True
 
         exploration_settings = exploration_settings or default_exploration_settings()
         self.max_exploration_guesses = exploration_settings["max_guesses"]
-        self.max_exploration_letters = exploration_settings["max_known_letters"]
 
         self.precision_dictionary = dictionary
 
@@ -39,7 +36,7 @@ class WordleStrategy:
 
     def next_guess(self):
         log.debug(
-            f"next_guess, guess={self.guess_num}, letters_known={self.known_letters}, exploration_mode={self.exploration_mode}")
+            f"next_guess, guess={self.guess_num}, exploration_mode={self.exploration_mode}")
 
         if self.exploration_mode:
             self.last_guess = self.word_scorer._choose_next_word(
@@ -61,10 +58,6 @@ class WordleStrategy:
 
         log.debug(f"accept_result, word={guess}, result={results}")
 
-        for (letter, result) in zip(guess, results):
-            if result == CORRECT or result == MISPLACED:
-                self.known_letters.add(letter)
-
         self.precision_dictionary = remove_non_matching_words(
             self.precision_dictionary, guess, results)
         self.exploration_dictionary = remove_words_containing_letters(
@@ -79,10 +72,9 @@ class WordleStrategy:
     def _should_explore(self) -> bool:
         log.debug(
             f"_should_explore, guess_num={self.guess_num}, max_guesses={self.max_exploration_guesses}, "
-            f"exploration_dict_len={len(self.exploration_dictionary)}, known_letters={self.known_letters}")
+            f"exploration_dict_len={len(self.exploration_dictionary)}")
         return bool(self.guess_num <= self.max_exploration_guesses
-                    and self.exploration_dictionary
-                    and len(self.known_letters) < self.max_exploration_letters)
+                    and self.exploration_dictionary)
 
     def _stop_exploring(self):
         self.exploration_mode = False
@@ -114,8 +106,7 @@ def is_possible_solution(word: str, guess: str, letter_scores: list) -> bool:
 
 def default_exploration_settings() -> map:
     return {
-        "max_guesses": 4,
-        "max_known_letters": 4,
+        "max_guesses": 4
     }
 
 

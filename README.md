@@ -10,7 +10,7 @@ python adviser.py
 Guess 1 - I suggest 'cares'
 What did you guess? (return if you used my suggestion)
 cares
-What was the result? wrong=>w, misplaced=>m, correct=>c, invalid word=>i, finished=>f
+What was the result? wrong=>w, misplaced=>m, correct=>c
 wwwww
 Guess 2 - I suggest 'ponty'
 What did you guess? (return if you used my suggestion)
@@ -18,17 +18,13 @@ What did you guess? (return if you used my suggestion)
 
 `python wordle.py` will choose a random word and the computer will play against itself. Use the `-s` commandline argument to choose the solution word. For example:
 ```
-python wordle.py -s 
-python wordle.py -s fiver
-Solution is 'fiver'
-I'll guess 'cares'
-'cares' was wrong, letter scores are: wwmcw
-I'll guess 'ponty'
-'ponty' was wrong, letter scores are: wwwww
-I'll guess 'humid'
-'humid' was wrong, letter scores are: wwwmw
-I'll guess 'fiver'
-'fiver' is correct, I win!
+python wordle.py -s aging
+Solution is 'aging'
+'cares' was wrong
+'ponty' was wrong
+'humid' was wrong
+'ligan' was wrong
+'aging' is correct, I win!
 ```
 
 ## What's It Doing?

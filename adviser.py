@@ -10,7 +10,7 @@ args = parser.parse_args()
 
 settings = {
     "max_guesses": args.exploration_guesses
-    }
+}
 
 strat = WordleStrategy(pfs.PositionalFrequencyWordScorer(),
                        exploration_settings=settings)
@@ -26,18 +26,9 @@ while guess_num < 7:
         guess = suggestion
 
     result = input(
-        "What was the result? wrong=>w, misplaced=>m, correct=>c, invalid word=>i, finished=>f\n")
+        "What was the result? wrong=>w, misplaced=>m, correct=>c\n")
 
-    if len(result) == 1:
-        if result[0] == "f":
-            print(f"Woohoo, congrats!")
-            break
-        elif result[0] == "i":
-            print(f"Removing '{guess}' from the dictionary...")
-            guess_num -= 1
-            words.remove(guess)
-            # TODO: permanently remove from the dictionary file
-    elif result == "ccccc":
+    if result == "ccccc":
         print(f"Woohoo, congrats!")
         break
     else:

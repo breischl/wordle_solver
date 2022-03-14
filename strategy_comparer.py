@@ -71,10 +71,6 @@ parser.add_argument("-gn", "--guesses_min", default=3, type=int,
                     help="Min number of guesses to stay in exploration mode")
 parser.add_argument("-gx", "--guesses_max", default=5, type=int,
                     help="Max number of guesses to stay in exploration mode")
-parser.add_argument("-ln", "--letters_min", default=3, type=int,
-                    help="Min number of known letters to stay in exploration mode")
-parser.add_argument("-lx", "--letters_max", default=6, type=int,
-                    help="Max number of known letters to stay in exploration mode")
 args = parser.parse_args()
 
 scorers = []
@@ -92,12 +88,10 @@ words = wd.load_dictionary()
 
 for (scorer_name, scorer) in scorers:
     for explore_guesses in range(args.guesses_min, args.guesses_max + 1):
-        for explore_letters in range(args.letters_min, args.letters_max + 1):
-            settings = {
-                "max_guesses": explore_guesses,
-                "max_known_letters": explore_letters
-            }
-            results = check_strategy(lambda: WordleStrategy(
-                word_scorer=scorer, exploration_settings=settings, dictionary=words.copy()))
-            print_summary_stats(
-                results, f"{scorer_name} word scorer, exploration mode for {explore_guesses} guesses, max known letters {explore_letters}")
+        settings = {
+            "max_guesses": explore_guesses
+        }
+        results = check_strategy(lambda: WordleStrategy(
+            word_scorer=scorer, exploration_settings=settings, dictionary=words.copy()))
+        print_summary_stats(
+            results, f"{scorer_name} word scorer, exploration mode for {explore_guesses} guesses")

@@ -51,8 +51,7 @@ def main():
     solution = args.solution or random.choice(words)
 
     settings = {
-        "max_guesses": args.exploration,
-        "max_known_letters": 4
+        "max_guesses": args.exploration
     }
 
     if(args.wordscorer == "PositionalFrequency"):
