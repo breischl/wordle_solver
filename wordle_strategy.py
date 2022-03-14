@@ -1,9 +1,14 @@
 from argparse import Namespace
 import wordle_dict as wd
+import log_config
+import logging
+
 
 WRONG = "w"
 MISPLACED = "m"
 CORRECT = "c"
+
+log = logging.getLogger(__name__)
 
 
 class WordleStrategy:
@@ -19,9 +24,11 @@ class WordleStrategy:
         self.guess_num = 1
         # Letters that we know are in the word somewhere, ie we got a "misplaced" or "correct" on them
         self.known_letters = set()
+        self.exploration_mode = True
 
-        exploration_settings = exploration_settings or default_settings()
-        self.max_exploration_guesses = exploration_settings["max_exploration_guesses"]
+        exploration_settings = exploration_settings or default_exploration_settings()
+        self.max_exploration_guesses = exploration_settings["max_guesses"]
+        self.max_exploration_letters = exploration_settings["max_known_letters"]
 
         self.precision_dictionary = dictionary
 
@@ -31,17 +38,28 @@ class WordleStrategy:
             self.exploration_dictionary = []
 
     def next_guess(self):
-        if self._should_explore():
+        log.debug(
+            f"next_guess, guess={self.guess_num}, letters_known={self.known_letters}, exploration_mode={self.exploration_mode}")
+
+        if self.exploration_mode:
             self.last_guess = self.word_scorer._choose_next_word(
                 self.exploration_dictionary, False)
         else:
             self.last_guess = self.word_scorer._choose_next_word(
+                self.precision_dictionary, (self.guess_num < 6))
+
+        # last guess failed, so we're out of words without duplicate letters. So start checking words with duplicates
+        if self.last_guess is None:
+            self.last_guess = self.word_scorer._choose_next_word(
                 self.precision_dictionary, True)
 
+        log.debug(f"next_guess={self.last_guess}")
         return self.last_guess
 
     def accept_result(self, results: list[str], guess: str = None):
         guess = guess or self.last_guess
+
+        log.debug(f"accept_result, word={guess}, result={results}")
 
         for (letter, result) in zip(guess, results):
             if result == CORRECT or result == MISPLACED:
@@ -52,17 +70,22 @@ class WordleStrategy:
         self.exploration_dictionary = remove_words_containing_letters(
             self.exploration_dictionary, guess)
 
-        if not self._should_explore():
+        if self.exploration_mode and not self._should_explore():
+            log.debug("Exiting exploration mode")
             self._stop_exploring()
 
         self.guess_num += 1
 
-    def _should_explore(self):
-        return self.guess_num <= self.max_exploration_guesses \
-            and self.exploration_dictionary \
-            and len(self.known_letters) < 4
+    def _should_explore(self) -> bool:
+        log.debug(
+            f"_should_explore, guess_num={self.guess_num}, max_guesses={self.max_exploration_guesses}, "
+            f"exploration_dict_len={len(self.exploration_dictionary)}, known_letters={self.known_letters}")
+        return bool(self.guess_num <= self.max_exploration_guesses
+                    and self.exploration_dictionary
+                    and len(self.known_letters) < self.max_exploration_letters)
 
     def _stop_exploring(self):
+        self.exploration_mode = False
         self.exploration_dictionary = []
 
 
@@ -89,10 +112,10 @@ def is_possible_solution(word: str, guess: str, letter_scores: list) -> bool:
     return True
 
 
-def default_settings() -> map:
+def default_exploration_settings() -> map:
     return {
-        "max_exploration_guesses": 4,
-        "guess_words_multiplier": 4,
+        "max_guesses": 4,
+        "max_known_letters": 4,
     }
 
 

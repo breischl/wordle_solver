@@ -1,6 +1,7 @@
 '''Functions for manipulating the in-memory dictionary and checking word results
 '''
 import random
+import sys
 from wordle_dict import *
 import positional_frequency_scorer as pfs
 import global_frequency_scorer as gfs
@@ -8,10 +9,14 @@ import argparse as arg
 from wordle_strategy import WRONG, WordleStrategy
 from wordle_strategy import MISPLACED
 from wordle_strategy import CORRECT
+import log_config
+import logging
+
+log = logging.getLogger(__name__)
 
 
 def check_word(solution: str, guess: str) -> tuple[bool, list[str]]:
-    '''Check whether a given guess matches the expected solution, and return that along with match scores for each letter. 
+    '''Check whether a given guess matches the expected solution, and return that along with match scores for each letter.
 
 
     Returns: (is_correct : bool, letter_scores : list[str])
@@ -31,7 +36,7 @@ def check_word(solution: str, guess: str) -> tuple[bool, list[str]]:
     return (False, letter_scores)
 
 
-if __name__ == "__main__":
+def main():
     parser = arg.ArgumentParser(
         description="Computer plays a game of Wordle against itself")
     parser.add_argument("-s", "--solution", type=str,
@@ -46,7 +51,8 @@ if __name__ == "__main__":
     solution = args.solution or random.choice(words)
 
     settings = {
-        "max_exploration_guesses": args.exploration
+        "max_guesses": args.exploration,
+        "max_known_letters": 4
     }
 
     if(args.wordscorer == "PositionalFrequency"):
@@ -63,9 +69,6 @@ if __name__ == "__main__":
 
     for guess_num in range(1, 7):
         guess_word = strat.next_guess()
-        mode = "exploration" if strat._should_explore() else 'precision'
-        print(
-            f"I know {len(strat.known_letters)} letters. I am in {mode} mode. I'll guess '{guess_word}'")
 
         (is_correct, letter_scores) = check_word(solution, guess_word)
 
@@ -73,7 +76,9 @@ if __name__ == "__main__":
             print(f"'{guess_word}' is correct, I win!")
             break
 
-        letter_score_str = str.join("", letter_scores)
-        print(f"'{guess_word}' was wrong, letter scores are: {letter_score_str}")
-
+        print(f"'{guess_word}' was wrong")
         strat.accept_result(letter_scores)
+
+
+if __name__ == "__main__":
+    sys.exit(main())

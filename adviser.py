@@ -4,13 +4,13 @@ import argparse as arg
 from wordle_strategy import WordleStrategy
 
 parser = arg.ArgumentParser(description="Advises you how to beat Wordle")
-parser.add_argument("-e", "--exploration", nargs=1, default=5, type=int,
+parser.add_argument("-eg", "--exploration_guesses", nargs=1, default=5, type=int,
                     help="Number of guesses to stay in exploration mode")
 args = parser.parse_args()
 
 settings = {
-    "max_exploration_guesses": args.exploration
-}
+    "max_guesses": args.exploration_guesses
+    }
 
 strat = WordleStrategy(pfs.PositionalFrequencyWordScorer(),
                        exploration_settings=settings)

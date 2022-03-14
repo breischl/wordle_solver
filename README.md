@@ -1,5 +1,5 @@
 # wordle_solver
-A set of scripts around solving the popular Wordle puzzle game. The best I've managed with this gets the correct answer 98.18% of the time. 
+A set of scripts around solving the popular Wordle puzzle game. The best I've managed with this gets the correct answer over 97% of the time. 
 
 This is mostly a learning exercise for me - it's my first non-trivial Python script. Please judge the code quality accordingly. :) 
 
