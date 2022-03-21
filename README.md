@@ -27,6 +27,18 @@ Solution is 'aging'
 'aging' is correct, I win!
 ```
 
+## Quordle
+I also implemented a version for [Quordle](https://www.quordle.com/), which is roughly like solving 4 Wordles at once. It's a little bit rougher, and I didn't test the success rate as much, but you can use it if you like. 
+
+```
+## Computer plays against itself
+python quordle.py
+
+## Tells you how to play
+python quordle_adviser.py
+```
+
+
 ## What's It Doing?
 The script has a dictionary of 5-letter words. For each of the five letter positions, it calculates how many of those words have each letter. So we have `5 positions * 26 letters = 130 letter-position` scores. Then it computes a score for each word that consists of the the frequency for each letter of that word. The highest scoring word is chosen as the guess. 
 
