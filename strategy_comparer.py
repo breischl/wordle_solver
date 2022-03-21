@@ -1,9 +1,9 @@
 from statistics import mean
 import wordle_dict as wd
-import wordle as w
 import numpy as np
 import argparse as arg
 from wordle_strategy import WordleStrategy
+from wordle_util import check_word
 import positional_frequency_scorer as pfs
 import global_frequency_scorer as gfs
 
@@ -38,7 +38,7 @@ def try_solve_word(strat: WordleStrategy, solution: str):
                 f"Bad guess for solution {solution}, guess number {guess_num}")
             quit()
 
-        (is_correct, result) = w.check_word(solution, guess)
+        (is_correct, result) = check_word(solution, guess)
         # print(
         #     f"solution {solution}, guess_num {guess_num}, guess {guess}, result {result}")
 

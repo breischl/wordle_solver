@@ -6,34 +6,11 @@ from wordle_dict import *
 import positional_frequency_scorer as pfs
 import global_frequency_scorer as gfs
 import argparse as arg
-from wordle_strategy import WRONG, WordleStrategy
-from wordle_strategy import MISPLACED
-from wordle_strategy import CORRECT
-import log_config
 import logging
-
+import log_config  # import does logging config
+from wordle_util import WRONG, CORRECT, MISPLACED, check_word
+from wordle_strategy import WordleStrategy
 log = logging.getLogger(__name__)
-
-
-def check_word(solution: str, guess: str) -> tuple[bool, list[str]]:
-    '''Check whether a given guess matches the expected solution, and return that along with match scores for each letter.
-
-
-    Returns: (is_correct : bool, letter_scores : list[str])
-    '''
-    if solution == guess:
-        return (True, [CORRECT for x in range(0, 5)])
-
-    letter_scores = []
-    for (guess_letter, correct_letter) in zip(guess, solution):
-        if guess_letter == correct_letter:
-            letter_scores.append(CORRECT)
-        elif guess_letter in solution:
-            letter_scores.append(MISPLACED)
-        else:
-            letter_scores.append(WRONG)
-
-    return (False, letter_scores)
 
 
 def main():

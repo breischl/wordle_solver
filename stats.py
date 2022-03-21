@@ -2,11 +2,10 @@ import wordle_dict as wd
 import numpy as np
 import matplotlib.pyplot as plt
 
-words = wd.load_dictionary()
 letters = [chr(l) for l in range(ord('a'), ord('z')+1)]
 
 
-def count_letters_by_position(wordlist: list) -> list:
+def count_letters_by_position(wordlist: list) -> list[dict[str, int]]:
     '''Calculate the frequency of each letter, at each position. Assumes all words are 5 letters long. 
 
     Returns: A list[dict], with 5 entries (one for each letter). The dictionaries are {letter:count}.
@@ -16,8 +15,7 @@ def count_letters_by_position(wordlist: list) -> list:
     ]
 
     for w in wordlist:
-        for idx in range(0, 5):
-            letter = w[idx]
+        for (idx, letter) in enumerate(w):
             position_counts[idx][letter] += 1
 
     return position_counts
@@ -92,6 +90,7 @@ def plot_letter_histogram(lcounts: list, name: str) -> None:
 
 
 if __name__ == "__main__":
+    words = wd.load_dictionary()
     # plot_letter_histogram(count_first_letters(words), "First letters")
     plot_letter_histogram(count_letter_frequency(words), "All letters")
     # plot_letter_histogram(count_letter_frequency_no_dup(
