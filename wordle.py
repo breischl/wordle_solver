@@ -18,28 +18,10 @@ def main():
         description="Computer plays a game of Wordle against itself")
     parser.add_argument("-s", "--solution", type=str,
                         help="Optionally specify the solution word for the computer to guess")
-    parser.add_argument("-w", "--wordscorer", type=str, default="PositionalFrequency",
-                        choices=["PositionalFrequency", "GlobalFrequency"])
-    parser.add_argument("-e", "--exploration", default=5, type=int,
-                        help="Number of guesses to remain in exploration mode")
     args = parser.parse_args()
 
-    words = load_dictionary()
-    solution = args.solution or random.choice(words)
-
-    settings = {
-        "max_guesses": args.exploration
-    }
-
-    if(args.wordscorer == "PositionalFrequency"):
-        scorer = pfs.PositionalFrequencyWordScorer()
-    elif(args.wordscorer == "GlobalFrequency"):
-        scorer = gfs.GlobalFrequencyWordScorer()
-    else:
-        print(f"Unknown word scorer: {args.wordscorer}")
-        quit()
-
-    strat = WordleStrategy(word_scorer=scorer, exploration_settings=settings)
+    solution = args.solution
+    strat = WordleStrategy()
 
     print(f"Solution is '{solution}'")
 
