@@ -2,6 +2,10 @@ import stats
 import logging
 import log_config
 import wordle_util as wu
+from collections import Counter
+from wordle_util import CORRECT
+from wordle_util import MISPLACED
+from wordle_util import WRONG
 
 logger = logging.getLogger(__name__)
 
@@ -51,8 +55,16 @@ class PositionalFrequencyWordScorer():
 
     def remove_non_matching_words(self, guess: str, letter_scores: list[str]) -> list[str]:
         new_wordlist = []
+
+        repeated_letter_counts = wu.count_repeats_in_solution(
+            guess, letter_scores)
+
+        guess_letter_counts = Counter(guess)
+
+        logger.debug("Repeated letters: %s", repeated_letter_counts)
+
         for word in self.wordlist:
-            if wu.is_possible_solution(word, guess, letter_scores):
+            if wu.is_possible_solution(word, guess, letter_scores, guess_letter_counts, repeated_letter_counts):
                 new_wordlist.append(word)
             else:
                 for (idx, letter) in enumerate(word):

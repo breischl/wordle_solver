@@ -16,15 +16,16 @@ class WordleStrategy:
             dictionary.copy())
         self.last_guess = None
         self.guess_num = 1
-        self.exploration_mode = True
 
         exploration_settings = exploration_settings or default_exploration_settings()
         self.max_exploration_guesses = exploration_settings["max_guesses"]
 
-        if self.max_exploration_guesses > 1:
+        if self.max_exploration_guesses > 0:
+            self.exploration_mode = True
             self.exploration_word_scorer = PositionalFrequencyWordScorer(
                 dictionary.copy())
         else:
+            self.exploration_mode = False
             self.exploration_word_scorer = None
 
     def next_guess(self):

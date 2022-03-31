@@ -65,33 +65,20 @@ def print_summary_stats(test_results: tuple[int, int, list[int]], strat_name: st
 
 parser = arg.ArgumentParser(
     description="Run the given strategy & settings against all known Wordle solutions")
-parser.add_argument("-w", "--wordscorer", type=str, default="All",
-                    choices=["PositionalFrequency", "GlobalFrequency", "All"])
 parser.add_argument("-gn", "--guesses_min", default=3, type=int,
                     help="Min number of guesses to stay in exploration mode")
 parser.add_argument("-gx", "--guesses_max", default=5, type=int,
                     help="Max number of guesses to stay in exploration mode")
 args = parser.parse_args()
 
-scorers = []
-if "All" in args.wordscorer:
-    args.wordscorer = ["PositionalFrequency", "GlobalFrequency"]
-
-if "PositionalFrequency" in args.wordscorer:
-    scorers.append(
-        ("Positional Frequency", pfs.PositionalFrequencyWordScorer()))
-if "GlobalFrequency" in args.wordscorer:
-    scorers.append(("Global Frequency", gfs.GlobalFrequencyWordScorer()))
-
-
 words = wd.load_dictionary()
 
-for (scorer_name, scorer) in scorers:
-    for explore_guesses in range(args.guesses_min, args.guesses_max + 1):
-        settings = {
-            "max_guesses": explore_guesses
-        }
-        results = check_strategy(lambda: WordleStrategy(
-            word_scorer=scorer, exploration_settings=settings, dictionary=words.copy()))
-        print_summary_stats(
-            results, f"{scorer_name} word scorer, exploration mode for {explore_guesses} guesses")
+for explore_guesses in range(args.guesses_min, args.guesses_max + 1):
+    settings = {
+        "max_guesses": explore_guesses
+    }
+    print(f"Starting run for guesses={explore_guesses}")
+    results = check_strategy(lambda: WordleStrategy(
+        exploration_settings=settings, dictionary=words.copy()))
+    print_summary_stats(
+        results, f"Exploration mode for {explore_guesses} guesses")
