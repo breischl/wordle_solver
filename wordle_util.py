@@ -87,3 +87,37 @@ def is_possible_solution(word: str, guess: str, letter_scores: list, guess_lette
                 return False
 
     return True
+
+
+def remove_non_matching_words(wordlist: list[str], guess: str, letter_scores: list[str]) -> tuple[list[str], list[str]]:
+    new_wordlist = []
+    words_removed = []
+
+    repeated_letter_counts = count_repeats_in_solution(
+        guess, letter_scores)
+
+    guess_letter_counts = Counter(guess)
+
+    log.debug("Repeated letters: %s", repeated_letter_counts)
+
+    for word in wordlist:
+        if is_possible_solution(word, guess, letter_scores, guess_letter_counts, repeated_letter_counts):
+            new_wordlist.append(word)
+        else:
+            words_removed.append(word)
+
+    return (new_wordlist, words_removed)
+
+
+def remove_words_containing_letters(wordlist: list[str], letters: str) -> tuple[list[str], list[str]]:
+    letter_set = set(letters)
+    new_wordlist = []
+    words_removed = []
+
+    for word in wordlist:
+        if letter_set.isdisjoint(word):
+            new_wordlist.append(word)
+        else:
+            words_removed.append(word)
+
+    return (new_wordlist, words_removed)

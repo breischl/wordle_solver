@@ -1,3 +1,4 @@
+from os import remove
 import stats
 import logging
 import log_config
@@ -53,34 +54,21 @@ class PositionalFrequencyWordScorer():
         else:
             return ([], None)
 
-    def remove_non_matching_words(self, guess: str, letter_scores: list[str]) -> list[str]:
-        new_wordlist = []
-
-        repeated_letter_counts = wu.count_repeats_in_solution(
-            guess, letter_scores)
-
-        guess_letter_counts = Counter(guess)
-
-        logger.debug("Repeated letters: %s", repeated_letter_counts)
-
-        for word in self.wordlist:
-            if wu.is_possible_solution(word, guess, letter_scores, guess_letter_counts, repeated_letter_counts):
-                new_wordlist.append(word)
-            else:
-                for (idx, letter) in enumerate(word):
-                    self.position_counts[idx][letter] -= 1
+    def remove_non_matching_words(self, guess: str, letter_scores: list[str]) -> None:
+        (new_wordlist, removed_words) = wu.remove_non_matching_words(
+            self.wordlist, guess, letter_scores)
 
         self.wordlist = new_wordlist
+        self._remove_words_from_counts(removed_words)
 
-    def remove_words_containing_letters(self, letters: str) -> list[str]:
-        letter_set = set(letters)
-        new_wordlist = []
-
-        for word in self.wordlist:
-            if letter_set.isdisjoint(word):
-                new_wordlist.append(word)
-            else:
-                for (idx, letter) in enumerate(word):
-                    self.position_counts[idx][letter] -= 1
+    def remove_words_containing_letters(self, letters: str) -> None:
+        (new_wordlist, removed_words) = wu.remove_words_containing_letters(
+            self.wordlist, letters)
 
         self.wordlist = new_wordlist
+        self._remove_words_from_counts(removed_words)
+
+    def _remove_words_from_counts(self, removed_words: list[str]) -> None:
+        for word in removed_words:
+            for (idx, letter) in enumerate(word):
+                self.position_counts[idx][letter] -= 1
