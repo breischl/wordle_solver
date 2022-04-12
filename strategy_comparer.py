@@ -2,7 +2,7 @@ from statistics import mean
 import wordle_dict as wd
 import numpy as np
 import argparse as arg
-from wordle_letter_frequency_strategy import WordleLetterFrequencyStrategy
+from letter_frequency_strategy import WordleLetterFrequencyStrategy
 from wordle_util import check_word
 import positional_frequency_scorer as pfs
 import global_frequency_scorer as gfs

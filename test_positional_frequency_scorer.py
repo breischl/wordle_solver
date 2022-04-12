@@ -1,9 +1,9 @@
 import unittest
 import positional_frequency_scorer as pfs
 import wordle_dict as wd
-from wordle_letter_frequency_strategy import WRONG
-from wordle_letter_frequency_strategy import MISPLACED
-from wordle_letter_frequency_strategy import CORRECT
+from letter_frequency_strategy import WRONG
+from letter_frequency_strategy import MISPLACED
+from letter_frequency_strategy import CORRECT
 
 
 class TestPositionalFrequencyScorer(unittest.TestCase):

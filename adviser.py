@@ -1,5 +1,5 @@
 
-from wordle_letter_frequency_strategy import WordleLetterFrequencyStrategy
+from letter_frequency_strategy import WordleLetterFrequencyStrategy
 
 strat = WordleLetterFrequencyStrategy()
 

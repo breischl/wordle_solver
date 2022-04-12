@@ -9,7 +9,7 @@ import argparse as arg
 import logging
 import log_config  # import does logging config
 from wordle_util import WRONG, CORRECT, MISPLACED, check_word
-from wordle_letter_frequency_strategy import WordleLetterFrequencyStrategy
+from letter_frequency_strategy import WordleLetterFrequencyStrategy
 log = logging.getLogger(__name__)
 
 
