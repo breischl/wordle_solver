@@ -1,9 +1,9 @@
 import unittest
 import global_frequency_scorer as gfs
 import wordle_dict as wd
-from wordle_strategy import WRONG
-from wordle_strategy import MISPLACED
-from wordle_strategy import CORRECT
+from wordle_letter_frequency_strategy import WRONG
+from wordle_letter_frequency_strategy import MISPLACED
+from wordle_letter_frequency_strategy import CORRECT
 
 
 class TestGlobalFrequencyScorer(unittest.TestCase):

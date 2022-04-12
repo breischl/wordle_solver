@@ -2,7 +2,7 @@ from statistics import mean
 import wordle_dict as wd
 import numpy as np
 import argparse as arg
-from wordle_strategy import WordleStrategy
+from wordle_letter_frequency_strategy import WordleLetterFrequencyStrategy
 from wordle_util import check_word
 import positional_frequency_scorer as pfs
 import global_frequency_scorer as gfs
@@ -30,7 +30,7 @@ def check_strategy(strat_builder: callable) -> tuple[int, int, list[int]]:
     return (wins, losses, guess_counts, sorted(misses))
 
 
-def try_solve_word(strat: WordleStrategy, solution: str):
+def try_solve_word(strat: WordleLetterFrequencyStrategy, solution: str):
     for guess_num in range(1, 7):
         guess = strat.next_guess()
         if not guess:
@@ -78,7 +78,7 @@ for explore_guesses in range(args.guesses_min, args.guesses_max + 1):
         "max_guesses": explore_guesses
     }
     print(f"Starting run for guesses={explore_guesses}")
-    results = check_strategy(lambda: WordleStrategy(
+    results = check_strategy(lambda: WordleLetterFrequencyStrategy(
         exploration_settings=settings, dictionary=words.copy()))
     print_summary_stats(
         results, f"Exploration mode for {explore_guesses} guesses")

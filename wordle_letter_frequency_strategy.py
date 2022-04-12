@@ -7,7 +7,7 @@ from wordle_util import WRONG, CORRECT, MISPLACED
 log = logging.getLogger(__name__)
 
 
-class WordleStrategy:
+class WordleLetterFrequencyStrategy:
     '''A Wordle guessing strategy.
     '''
 

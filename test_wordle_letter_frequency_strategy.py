@@ -1,12 +1,12 @@
 import unittest
-import wordle_strategy as ws
+import wordle_letter_frequency_strategy as ws
 import wordle_dict as wd
 from wordle_util import WRONG, MISPLACED, CORRECT
 
 
 class TestWordleStrategy(unittest.TestCase):
     def setUp(self) -> None:
-        self.strat = ws.WordleStrategy(wd.load_dictionary())
+        self.strat = ws.WordleLetterFrequencyStrategy(wd.load_dictionary())
         return super().setUp()
 
     def test_accepts_feedback(self):

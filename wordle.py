@@ -9,7 +9,7 @@ import argparse as arg
 import logging
 import log_config  # import does logging config
 from wordle_util import WRONG, CORRECT, MISPLACED, check_word
-from wordle_strategy import WordleStrategy
+from wordle_letter_frequency_strategy import WordleLetterFrequencyStrategy
 log = logging.getLogger(__name__)
 
 
@@ -21,7 +21,7 @@ def main():
     args = parser.parse_args()
 
     solution = args.solution
-    strat = WordleStrategy()
+    strat = WordleLetterFrequencyStrategy()
 
     print(f"Solution is '{solution}'")
 

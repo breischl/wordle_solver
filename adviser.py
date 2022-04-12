@@ -1,7 +1,7 @@
 
-from wordle_strategy import WordleStrategy
+from wordle_letter_frequency_strategy import WordleLetterFrequencyStrategy
 
-strat = WordleStrategy()
+strat = WordleLetterFrequencyStrategy()
 
 guess_num = 1
 while guess_num < 7:
