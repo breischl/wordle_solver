@@ -15,7 +15,6 @@ class QuordleStrategy:
         self.precision_word_scorers = [PositionalFrequencyWordScorer(
             dictionary.copy()) for x in range(0, 4)]
         self.correct_words = [None, None, None, None]
-        self.last_guess = None
         self.guess_num = 1
         self.exploration_mode = True
 
@@ -32,32 +31,31 @@ class QuordleStrategy:
         log.debug(
             f"next_guess, guess={self.guess_num}, exploration_mode={self.exploration_mode}")
 
+        guess = None
         if self.exploration_mode:
-            self.last_guess = self.exploration_word_scorer._choose_next_word(
+            guess = self.exploration_word_scorer._choose_next_word(
                 False)
         else:
-            self.last_guess = self._choose_best_precision_scorer(
+            guess = self._choose_best_precision_scorer(
             )._choose_next_word(self.guess_num < 6)
 
         # last guess failed, so we're out of words without duplicate letters. So start checking words with duplicates
-        if self.last_guess is None:
-            self.last_guess = self._choose_best_precision_scorer()._choose_next_word(True)
+        if guess is None:
+            guess = self._choose_best_precision_scorer()._choose_next_word(True)
 
-        if self.last_guess is None:
+        if guess is None:
             log.debug(f"Failed to come up with a guess!")
             return None
 
-        log.debug(f"next_guess={self.last_guess}")
-        return self.last_guess
+        log.debug(f"next_guess={guess}")
+        return guess
 
     def _choose_best_precision_scorer(self):
         log.debug("Choosing best precision scorer...")
         return min(self.precision_word_scorers,
                    key=lambda s: 99999 if s is None else len(s.wordlist))
 
-    def accept_results(self, results: list[list[str]], guess: str = None):
-        guess = guess or self.last_guess
-
+    def accept_results(self, results: list[list[str]], guess: str):
         log.debug(f"accept_result, word={guess}, result={results}")
 
         # Update each individual scorer with its own result

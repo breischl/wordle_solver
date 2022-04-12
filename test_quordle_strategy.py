@@ -33,7 +33,7 @@ class TestWordleStrategy(unittest.TestCase):
                      for scorer in s.precision_word_scorers]
         results = [wu.check_word(solution, guess)[1]
                    for solution in solutions]
-        s.accept_results(results)
+        s.accept_results(results, guess)
 
         for (scorer, pre_size) in zip(self.strat.precision_word_scorers, pre_sizes):
             self.assertLess(len(scorer.wordlist), pre_size)
@@ -46,7 +46,7 @@ class TestWordleStrategy(unittest.TestCase):
 
         results = [str(wu.check_word(solution, guess)[1])
                    for solution in solutions]
-        s.accept_results(results)
+        s.accept_results(results, guess)
 
         for (scorer, pre_size) in zip(self.strat.precision_word_scorers, pre_sizes):
             self.assertLess(len(scorer.wordlist), pre_size)
@@ -59,7 +59,7 @@ class TestWordleStrategy(unittest.TestCase):
 
         results = [wu.check_word(solution, guess)[1]
                    for solution in solutions]
-        s.accept_results(results)
+        s.accept_results(results, guess)
 
         for (scorer, pre_size) in zip(self.strat.precision_word_scorers, pre_sizes):
             self.assertLess(len(scorer.wordlist), pre_size)

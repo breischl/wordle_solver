@@ -14,7 +14,6 @@ class WordleLetterFrequencyStrategy:
     def __init__(self, dictionary: list[str] = wd.load_dictionary(), exploration_settings: map = None):
         self.precision_word_scorer = PositionalFrequencyWordScorer(
             dictionary.copy())
-        self.last_guess = None
         self.guess_num = 1
 
         exploration_settings = exploration_settings or default_exploration_settings()
@@ -32,24 +31,23 @@ class WordleLetterFrequencyStrategy:
         log.debug(
             f"next_guess, guess={self.guess_num}, exploration_mode={self.exploration_mode}")
 
+        guess = None
         if self.exploration_mode:
-            self.last_guess = self.exploration_word_scorer._choose_next_word(
+            guess = self.exploration_word_scorer._choose_next_word(
                 False)
         else:
-            self.last_guess = self.precision_word_scorer._choose_next_word(
+            guess = self.precision_word_scorer._choose_next_word(
                 self.guess_num < 6)
 
         # last guess failed, so we're out of words without duplicate letters. So start checking words with duplicates
-        if self.last_guess is None:
-            self.last_guess = self.precision_word_scorer._choose_next_word(
+        if guess is None:
+            guess = self.precision_word_scorer._choose_next_word(
                 True)
 
-        log.debug(f"next_guess={self.last_guess}")
-        return self.last_guess
+        log.debug(f"next_guess={guess}")
+        return guess
 
-    def accept_result(self, results: list[str], guess: str = None):
-        guess = guess or self.last_guess
-
+    def accept_result(self, results: list[str], guess: str):
         log.debug(f"accept_result, word={guess}, result={results}")
 
         self.precision_word_scorer.remove_non_matching_words(guess, results)

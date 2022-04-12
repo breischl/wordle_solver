@@ -47,7 +47,7 @@ def main():
                 print(
                     f"Guess {guess_num} word {idx + 1}: '{guess_word}' was wrong, result was '{letter_scores}'")
 
-        strat.accept_results([r[1] for r in all_results])
+        strat.accept_results([r[1] for r in all_results], guess_word)
 
 
 def _check_single_solution(solution: str, guess_word: str):

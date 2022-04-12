@@ -6,6 +6,10 @@ from wordle_letter_frequency_strategy import WordleLetterFrequencyStrategy
 from wordle_util import check_word
 import positional_frequency_scorer as pfs
 import global_frequency_scorer as gfs
+import logging
+import log_config  # import does logging config
+
+log = logging.getLogger(__name__)
 
 
 def check_strategy(strat_builder: callable) -> tuple[int, int, list[int]]:
@@ -16,7 +20,6 @@ def check_strategy(strat_builder: callable) -> tuple[int, int, list[int]]:
     misses = []
 
     for solution in oracle:
-        # print(f"Oracle contains {len(oracle)} words, dictionary contains {len(words)} words")
         num_guesses = try_solve_word(strat_builder(), solution)
 
         if num_guesses < 7:
@@ -25,12 +28,11 @@ def check_strategy(strat_builder: callable) -> tuple[int, int, list[int]]:
         else:
             losses += 1
             misses.append(solution)
-        # print(f"Took {num_guesses} to solve '{solution}'")
 
     return (wins, losses, guess_counts, sorted(misses))
 
 
-def try_solve_word(strat: WordleLetterFrequencyStrategy, solution: str):
+def try_solve_word(strat, solution: str):
     for guess_num in range(1, 7):
         guess = strat.next_guess()
         if not guess:
