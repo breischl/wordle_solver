@@ -19,10 +19,13 @@ def main():
                         help="Optionally specify the solution word for the computer to guess")
     parser.add_argument("-r", "--strategy", type=str, default="LetterFrequencyStrategy",
                         help="Select a solver strategy, either LetterFrequencyStrategy or WordFrequencyStrategy")
+    parser.add_argument("-g", "--guesses", type=int, default=4,
+                        help="Number of exploration guesses to use for LetterFrequencyStrategy")
     args = parser.parse_args()
 
     solution = args.solution
-    strat = WordleLetterFrequencyStrategy()
+    strat = WordleLetterFrequencyStrategy(
+        exploration_settings={"max_guesses": args.guesses})
 
     if args.strategy == "WordFrequencyStrategy":
         strat = WordFrequencyStrategy()

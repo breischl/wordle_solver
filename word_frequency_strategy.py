@@ -21,7 +21,7 @@ class WordFrequencyStrategy:
 
         misplaced_letters = wu.count_misplaced_letters(guess, results)
 
-        log.debug("Repeated letters: %s", misplaced_letters)
+        log.debug("Misplaced letters: %s", misplaced_letters)
 
         new_dictionary = []
         for ws_tuple in self.dictionary:

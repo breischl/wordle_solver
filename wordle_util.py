@@ -46,7 +46,7 @@ def count_misplaced_letters(guess: str, letter_scores: list[str]) -> dict[str, i
     '''
     misplaced_letters = defaultdict(int)
     for (guess_letter, score) in zip(guess, letter_scores):
-        if score != WRONG:
+        if score == MISPLACED:
             misplaced_letters[guess_letter] += 1
 
     return misplaced_letters
@@ -68,7 +68,7 @@ def is_possible_solution(word: str, guess: str, letter_scores: list, misplaced_l
             # log.debug(
             #     "Letter was misplaced, word doesn't have that letter anywhere, result False")
             return False
-        elif score == WRONG and l_guess in word and l_guess not in misplaced_letters:
+        elif score == WRONG and l_guess in word and l_guess not in misplaced_letters and word.count(l_guess) >= guess.count(l_guess):
             # Letter was wrong and there are no other instances of it in the guess,
             # therefore the solution does not have that letter anywhere
             return False
