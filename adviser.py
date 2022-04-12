@@ -7,6 +7,10 @@ guess_num = 1
 while guess_num < 7:
     suggestion = strat.next_guess()
 
+    if not suggestion:
+        print("I have no other ideas, sorry!")
+        exit()
+
     print(f"Guess {guess_num} - I suggest '{suggestion}'")
     guess = input("What did you guess? (return if you used my suggestion)")
 

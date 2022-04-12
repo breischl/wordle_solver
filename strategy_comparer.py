@@ -3,11 +3,11 @@ import wordle_dict as wd
 import numpy as np
 import argparse as arg
 from letter_frequency_strategy import WordleLetterFrequencyStrategy
+from word_frequency_strategy import WordFrequencyStrategy
 from wordle_util import check_word
-import positional_frequency_scorer as pfs
-import global_frequency_scorer as gfs
 import logging
 import log_config  # import does logging config
+from wordle_util import WRONG
 
 log = logging.getLogger(__name__)
 
@@ -35,16 +35,12 @@ def check_strategy(strat_builder: callable) -> tuple[int, int, list[int]]:
 def try_solve_word(strat, solution: str):
     for guess_num in range(1, 7):
         guess = strat.next_guess()
-        if not guess:
-            print(
-                f"Bad guess for solution {solution}, guess number {guess_num}")
-            quit()
+        if guess:
+            (is_correct, result) = check_word(solution, guess)
+        else:
+            return 7
 
-        (is_correct, result) = check_word(solution, guess)
-        # print(
-        #     f"solution {solution}, guess_num {guess_num}, guess {guess}, result {result}")
-
-        if(is_correct):
+        if is_correct:
             return guess_num
         else:
             strat.accept_result(result, guess)
@@ -71,16 +67,24 @@ parser.add_argument("-gn", "--guesses_min", default=3, type=int,
                     help="Min number of guesses to stay in exploration mode")
 parser.add_argument("-gx", "--guesses_max", default=5, type=int,
                     help="Max number of guesses to stay in exploration mode")
+parser.add_argument("-t", "--strategy",
+                    default="LetterFrequencyStrategy", type=str)
 args = parser.parse_args()
 
 words = wd.load_dictionary()
 
-for explore_guesses in range(args.guesses_min, args.guesses_max + 1):
-    settings = {
-        "max_guesses": explore_guesses
-    }
-    print(f"Starting run for guesses={explore_guesses}")
-    results = check_strategy(lambda: WordleLetterFrequencyStrategy(
-        exploration_settings=settings, dictionary=words.copy()))
+if args.strategy == "LetterFrequencyStrategy":
+    for explore_guesses in range(args.guesses_min, args.guesses_max + 1):
+        settings = {
+            "max_guesses": explore_guesses
+        }
+        print(f"Starting run for guesses={explore_guesses}")
+        results = check_strategy(lambda: WordleLetterFrequencyStrategy(
+            exploration_settings=settings, dictionary=words.copy()))
+        print_summary_stats(
+            results, f"Exploration mode for {explore_guesses} guesses")
+elif args.strategy == "WordFrequencyStrategy":
+    print("Testing WordFrequencyStrategy")
+    results = check_strategy(lambda: WordFrequencyStrategy())
     print_summary_stats(
-        results, f"Exploration mode for {explore_guesses} guesses")
+        results, f"Word frequency strategy")

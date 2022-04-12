@@ -12,14 +12,15 @@ class TestWordle(TestCase):
         return super().setUp()
 
     def test_count_repeats_in_solution(self):
-        repeats = count_repeats_in_solution(
+        misplacements = count_misplaced_letters(
             "flail", [WRONG, MISPLACED, WRONG, WRONG, MISPLACED])
-        self.assertEqual(repeats['l'], 2)
-        self.assertEqual(len(repeats), 1)
+        self.assertEqual(misplacements['l'], 2)
+        self.assertEqual(len(misplacements), 1)
 
-        repeats = count_repeats_in_solution(
+        misplacements = count_misplaced_letters(
             "tummy", [WRONG, WRONG, MISPLACED, WRONG, WRONG])
-        self.assertEqual(len(repeats), 0)
+        self.assertEqual(len(misplacements), 1)
+        self.assertEqual(misplacements['m'], 1)
 
     def test_check_word_multi_letter_guess(self):
         (is_correct, letter_scores) = check_word(
@@ -37,38 +38,42 @@ class TestWordle(TestCase):
 
     def test_is_possible_solution(self):
         self.assertFalse(is_possible_solution(word="tamed", guess="tummy", letter_scores=[
-            WRONG, CORRECT, CORRECT, CORRECT, CORRECT], guess_letter_counts=Counter("tummy"), repeated_letter_counts=defaultdict(int)))
+            WRONG, CORRECT, CORRECT, CORRECT, CORRECT], misplaced_letters=defaultdict(int)))
 
         self.assertFalse(is_possible_solution(word="tamed", guess="tummy", letter_scores=[
-            MISPLACED, CORRECT, CORRECT, CORRECT, CORRECT], guess_letter_counts=Counter("tummy"), repeated_letter_counts=defaultdict(int)))
+            MISPLACED, CORRECT, CORRECT, CORRECT, CORRECT], misplaced_letters=defaultdict(int)))
 
         self.assertTrue(is_possible_solution(word="tumor", guess="tummr", letter_scores=[
-            CORRECT, CORRECT, CORRECT, MISPLACED, CORRECT], guess_letter_counts=Counter("tummr"), repeated_letter_counts=defaultdict(int)))
+            CORRECT, CORRECT, CORRECT, MISPLACED, CORRECT], misplaced_letters=defaultdict(int)))
 
     def test_is_possible_solution_with_repeats(self):
         self.assertFalse(is_possible_solution(word="faulty",
                                               guess="flail",
                                               letter_scores=[
                                                   WRONG, MISPLACED, WRONG, WRONG, MISPLACED],
-                                              guess_letter_counts=Counter(
-                                                  "flail"),
-                                              repeated_letter_counts={'l': 2}))
+                                              misplaced_letters={'l': 2}))
 
         self.assertTrue(is_possible_solution(word="lowly",
                                              guess="flail",
                                              letter_scores=[
                                                   WRONG, MISPLACED, WRONG, WRONG, MISPLACED],
-                                             guess_letter_counts=Counter(
-                                                 "flail"),
-                                             repeated_letter_counts={'l': 2}))
+
+                                             misplaced_letters={'l': 2}))
 
         self.assertTrue(is_possible_solution(word="jolly",
                                              guess="flail",
                                              letter_scores=[
                                                   WRONG, MISPLACED, WRONG, WRONG, MISPLACED],
-                                             guess_letter_counts=Counter(
-                                                 "flail"),
-                                             repeated_letter_counts={'l': 2}))
+
+                                             misplaced_letters={'l': 2}))
+
+    def test_is_possible_solution_alley_added(self):
+        self.assertFalse(is_possible_solution(word="added",
+                                              guess="added",
+                                              letter_scores=[
+                                                    CORRECT, WRONG, WRONG, CORRECT, WRONG],
+
+                                              misplaced_letters={}))
 
     # from examples/lowly3.png
 
@@ -102,3 +107,9 @@ class TestWordle(TestCase):
             solution="lowly", guess="jolly")
         self.assertEqual(
             [WRONG, CORRECT, MISPLACED, CORRECT, CORRECT], letter_scores)
+
+    def test_alley_added(self):
+        (is_correct, letter_scores) = check_word(
+            solution="added", guess="alley")
+        self.assertEqual(
+            [CORRECT, WRONG, WRONG, CORRECT, WRONG], letter_scores)

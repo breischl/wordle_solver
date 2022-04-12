@@ -41,26 +41,19 @@ def check_word(solution: str, guess: str) -> tuple[bool, list[str]]:
     return (False, letter_scores)
 
 
-def count_repeats_in_solution(guess: str, letter_scores: list[str]) -> dict[str, int]:
-    '''Count the number of times a letter got a non-WRONG answer in the result. This is the number of times we expect the letter in the solution.
+def count_misplaced_letters(guess: str, letter_scores: list[str]) -> dict[str, int]:
+    '''Count the number of times a letter got a MISPLACED answer in the result.
     '''
-    repeated_letter_counts = defaultdict(int)
+    misplaced_letters = defaultdict(int)
     for (guess_letter, score) in zip(guess, letter_scores):
         if score != WRONG:
-            repeated_letter_counts[guess_letter] += 1
+            misplaced_letters[guess_letter] += 1
 
-    for letter in list(repeated_letter_counts.keys()):
-        if repeated_letter_counts[letter] < 2:
-            del repeated_letter_counts[letter]
-
-    return repeated_letter_counts
+    return misplaced_letters
 
 
-def is_possible_solution(word: str, guess: str, letter_scores: list, guess_letter_counts: Counter, repeated_letter_counts: dict[str, int]) -> bool:
+def is_possible_solution(word: str, guess: str, letter_scores: list, misplaced_letters: dict[str, int]) -> bool:
     '''Check if a given word could possibly be the solution, given the results of a previous guess.
-
-    `repeated_letter_counts` can be obtained from the `count_repeats_in_solution()` function.
-
     '''
     for (l_word, l_guess, score) in zip(word, guess, letter_scores):
         if score == CORRECT and l_word != l_guess:
@@ -75,13 +68,13 @@ def is_possible_solution(word: str, guess: str, letter_scores: list, guess_lette
             # log.debug(
             #     "Letter was misplaced, word doesn't have that letter anywhere, result False")
             return False
-        elif score == WRONG and l_guess in word and l_guess not in repeated_letter_counts and guess_letter_counts[l_guess] == 1:
-            # log.debug(
-            #     "Letter was wrong and it wasn't repeated, word contains that letter, result False")
+        elif score == WRONG and l_guess in word and l_guess not in misplaced_letters:
+            # Letter was wrong and there are no other instances of it in the guess,
+            # therefore the solution does not have that letter anywhere
             return False
 
-    if repeated_letter_counts:
-        for (letter, count) in repeated_letter_counts.items():
+    if misplaced_letters:
+        for (letter, count) in misplaced_letters.items():
             if word.count(letter) < count:
                 log.debug("Expected letter to be repeated, but it wasn't")
                 return False
@@ -93,15 +86,12 @@ def remove_non_matching_words(wordlist: list[str], guess: str, letter_scores: li
     new_wordlist = []
     words_removed = []
 
-    repeated_letter_counts = count_repeats_in_solution(
-        guess, letter_scores)
+    misplaced_letters = count_misplaced_letters(guess, letter_scores)
 
-    guess_letter_counts = Counter(guess)
-
-    log.debug("Repeated letters: %s", repeated_letter_counts)
+    log.debug("Misplaced letters: %s", misplaced_letters)
 
     for word in wordlist:
-        if is_possible_solution(word, guess, letter_scores, guess_letter_counts, repeated_letter_counts):
+        if is_possible_solution(word, guess, letter_scores, misplaced_letters):
             new_wordlist.append(word)
         else:
             words_removed.append(word)
