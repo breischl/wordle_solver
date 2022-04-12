@@ -45,7 +45,7 @@ def try_solve_word(strat: WordleLetterFrequencyStrategy, solution: str):
         if(is_correct):
             return guess_num
         else:
-            strat.accept_result(result)
+            strat.accept_result(result, guess)
 
     return 7
 
