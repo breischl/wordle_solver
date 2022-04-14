@@ -52,7 +52,7 @@ def print_summary_stats(test_results: tuple[int, int, list[tuple[str, int]]], st
     (wins, losses, successes, missed_words) = test_results
     win_pct = wins / (wins + losses)
     mean_guesses = np.mean([c[1] for c in successes], dtype=np.float32)
-    median_guesses = np.mean([c[1] for c in successes], dtype=np.float32)
+    median_guesses = np.median([c[1] for c in successes], dtype=np.float32)
 
     print(f'{strat_name}')
     print(
