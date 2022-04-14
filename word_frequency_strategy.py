@@ -1,7 +1,6 @@
 import wordle_dict as wd
 import logging
 import log_config  # import does logging config
-from wordle_util import WRONG, CORRECT, MISPLACED
 import wordle_util as wu
 
 log = logging.getLogger(__name__)
@@ -11,8 +10,16 @@ class WordFrequencyStrategy:
     def __init__(self, dictionary: list[tuple[str, int]] = wd.load_frequency()):
         self.dictionary = dictionary
 
+        # This is what Dave was using, so for now we're matching that to validate parity with his implementation
+        self.forced_first_word = "raise"
+
     def next_guess(self):
-        guess = self.dictionary[0][0] if self.dictionary else None
+        if self.forced_first_word:
+            guess = self.forced_first_word
+            self.forced_first_word = None
+        else:
+            guess = self.dictionary[0][0] if self.dictionary else None
+
         log.debug(f"next_guess={guess}")
         return guess
 
