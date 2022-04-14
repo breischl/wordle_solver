@@ -12,7 +12,7 @@ from wordle_util import WRONG
 log = logging.getLogger(__name__)
 
 
-def check_strategy(strat_builder: callable) -> tuple[int, int, list[int]]:
+def check_strategy(strat_builder: callable) -> tuple[int, int, list[tuple[str, int]]]:
     oracle = wd.load_oracle()
     wins = 0
     losses = 0
@@ -24,7 +24,7 @@ def check_strategy(strat_builder: callable) -> tuple[int, int, list[int]]:
 
         if num_guesses < 7:
             wins += 1
-            guess_counts.append(num_guesses)
+            guess_counts.append((solution, num_guesses))
         else:
             losses += 1
             misses.append(solution)
@@ -48,17 +48,21 @@ def try_solve_word(strat, solution: str):
     return 7
 
 
-def print_summary_stats(test_results: tuple[int, int, list[int]], strat_name: str) -> None:
-    (wins, losses, guess_counts, missed_words) = test_results
+def print_summary_stats(test_results: tuple[int, int, list[tuple[str, int]]], strat_name: str) -> None:
+    (wins, losses, successes, missed_words) = test_results
     win_pct = wins / (wins + losses)
-    mean_guesses = np.mean(guess_counts, dtype=np.float32)
-    median_guesses = np.mean(guess_counts, dtype=np.float32)
+    mean_guesses = np.mean([c[1] for c in successes], dtype=np.float32)
+    median_guesses = np.mean([c[1] for c in successes], dtype=np.float32)
 
     print(f'{strat_name}')
     print(
         f'win rate: {win_pct:0.2%}, mean guesses: {mean_guesses:#0.2f}, median guesses: {median_guesses:#0.2f}')
     print(f'wins: {wins}, losses: {losses}\n')
     print(f'missed words: {missed_words}')
+    print("Successful guess counts:")
+
+    for (solution, guess_count) in successes:
+        print(f"{solution}: {guess_count}")
 
 
 parser = arg.ArgumentParser(
