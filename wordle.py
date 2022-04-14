@@ -17,7 +17,7 @@ def main():
         description="Computer plays a game of Wordle against itself")
     parser.add_argument("-s", "--solution", type=str,
                         help="Optionally specify the solution word for the computer to guess")
-    parser.add_argument("-r", "--strategy", type=str, default="LetterFrequencyStrategy",
+    parser.add_argument("-t", "--strategy", type=str, default="LetterFrequencyStrategy",
                         help="Select a solver strategy, either LetterFrequencyStrategy or WordFrequencyStrategy")
     parser.add_argument("-g", "--guesses", type=int, default=4,
                         help="Number of exploration guesses to use for LetterFrequencyStrategy")
