@@ -35,14 +35,9 @@ class WordleLetterFrequencyStrategy:
         if self.exploration_mode:
             guess = self.exploration_word_scorer._choose_next_word(
                 False)
-        else:
-            guess = self.precision_word_scorer._choose_next_word(
-                self.guess_num < 6)
 
-        # last guess failed, so we're out of words without duplicate letters. So start checking words with duplicates
         if guess is None:
-            guess = self.precision_word_scorer._choose_next_word(
-                True)
+            guess = self.precision_word_scorer._choose_next_word(True)
 
         log.debug(f"next_guess={guess}")
         return guess
