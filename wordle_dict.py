@@ -1,8 +1,13 @@
+import csv as csv
+
 '''Functions to handle loading and saving the dictionary from files
 '''
 DICTIONARY_FILE = 'words_alpha.txt'
 ORACLE_FILE = 'wordle_oracle.txt'
 FREQUENCY_FILE = 'word_frequency.csv'
+POSITION_COUNTS_CSV = "word_position_counts.csv"
+COMBINED_WORDS_CSV = "combined_word_counts.csv"
+WORD_FREQUENCY_CSV = "word_frequency.csv"
 
 
 def _parse_freq_line(line: str) -> tuple[str, int]:
@@ -64,6 +69,31 @@ def save_dictionary(words: list[str]) -> None:
         for w in words:
             word_file.write(w)
             word_file.write("\n")
+
+
+def _read_words_from_csv(file: str) -> list[str]:
+    with(open(file, "r", newline='') as count_file):
+        cr = csv.reader(count_file)
+        next(cr)  # throw away the header row
+        return [t[0] for t in cr]
+
+
+def load_position_frequency_dictionary() -> list[str]:
+    return _read_words_from_csv(POSITION_COUNTS_CSV)
+
+
+def load_word_frequency_dictionary() -> list[str]:
+    return _read_words_from_csv(WORD_FREQUENCY_CSV)
+
+
+cached_combined_dict: list[str] = None
+
+def load_combined_word_score_dictionary() -> list[str]:
+    global cached_combined_dict
+    if cached_combined_dict is None:
+        cached_combined_dict = _read_words_from_csv(COMBINED_WORDS_CSV)
+
+    return cached_combined_dict.copy()
 
 
 def is_valid_word(w: str):

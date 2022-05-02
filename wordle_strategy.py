@@ -1,19 +1,15 @@
-from positional_frequency_scorer import PositionalFrequencyWordScorer
-import wordle_dict as wd
 import logging
 import log_config  # import does logging config
-from wordle_util import WRONG, CORRECT, MISPLACED
 
 log = logging.getLogger(__name__)
 
 
-class WordleLetterFrequencyStrategy:
+class WordleStrategy:
     '''A Wordle guessing strategy.
     '''
 
-    def __init__(self, dictionary: list[str] = wd.load_dictionary(), exploration_settings: map = None):
-        self.precision_word_scorer = PositionalFrequencyWordScorer(
-            dictionary.copy())
+    def __init__(self, strategy_builder: callable, exploration_settings: map = None):
+        self.precision_word_scorer = strategy_builder()
         self.guess_num = 1
 
         exploration_settings = exploration_settings or default_exploration_settings()
@@ -21,8 +17,7 @@ class WordleLetterFrequencyStrategy:
 
         if self.max_exploration_guesses > 0:
             self.exploration_mode = True
-            self.exploration_word_scorer = PositionalFrequencyWordScorer(
-                dictionary.copy())
+            self.exploration_word_scorer = strategy_builder()
         else:
             self.exploration_mode = False
             self.exploration_word_scorer = None
@@ -60,8 +55,7 @@ class WordleLetterFrequencyStrategy:
         log.debug(
             f"_should_explore, guess_num={self.guess_num}, max_guesses={self.max_exploration_guesses}, "
             f"exploration_dict_len={len(self.exploration_word_scorer.wordlist)}")
-        return bool(self.guess_num <= self.max_exploration_guesses
-                    and self.exploration_word_scorer)
+        return bool(self.guess_num <= self.max_exploration_guesses and self.exploration_word_scorer)
 
     def _stop_exploring(self):
         self.exploration_mode = False
@@ -70,5 +64,5 @@ class WordleLetterFrequencyStrategy:
 
 def default_exploration_settings() -> map:
     return {
-        "max_guesses": 4
+        "max_guesses": 3
     }

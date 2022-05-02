@@ -10,10 +10,11 @@ class TestWordleStrategy(unittest.TestCase):
         return super().setUp()
 
     def test_basic_function(self) -> None:
+        forced_word = self.strat.forced_first_word
         guess = self.strat.next_guess()
-        self.assertEqual("about", guess)
+        self.assertEqual(guess, forced_word)
 
         self.strat.accept_result(
-            [WRONG, WRONG, MISPLACED, WRONG, MISPLACED], "about")
+            [WRONG, WRONG, MISPLACED, WRONG, MISPLACED], guess)
         guess = self.strat.next_guess()
-        self.assertEqual("other", guess)
+        self.assertEqual("video", guess)

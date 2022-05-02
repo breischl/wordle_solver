@@ -21,3 +21,8 @@ class TestWordleDict(unittest.TestCase):
         self.assertFalse(wd.is_valid_word("bonded"))
         self.assertFalse(wd.is_valid_word("abba"))
         self.assertFalse(wd.is_valid_word("abba\n"))
+
+    def test_load_combined_word_scores(self):
+        d = wd.load_combined_word_score_dictionary()
+        self.assertEqual(d[0], "about")
+        self.assertEqual(d[1], "other")

@@ -1,34 +1,31 @@
 '''Functions for manipulating the in-memory dictionary and checking word results
 '''
-import random
 import sys
 from wordle_dict import *
-from word_frequency_strategy import WordFrequencyStrategy
 import argparse as arg
 import logging
 import log_config  # import does logging config
-from wordle_util import WRONG, CORRECT, MISPLACED, check_word
-from letter_frequency_strategy import WordleLetterFrequencyStrategy
+from wordle_util import check_word
+from wordle_strategies import build_strategy_from_name
+
 log = logging.getLogger(__name__)
 
 
 def main():
     parser = arg.ArgumentParser(
         description="Computer plays a game of Wordle against itself")
-    parser.add_argument("-s", "--solution", type=str,
+    parser.add_argument("-s", "--solution", type=str, required=True,
                         help="Optionally specify the solution word for the computer to guess")
-    parser.add_argument("-t", "--strategy", type=str, default="LetterFrequencyStrategy",
-                        help="Select a solver strategy, either LetterFrequencyStrategy or WordFrequencyStrategy")
+    parser.add_argument("-t", "--strategy", type=str, default="CombinedWordScore",
+                        help="Select a solver strategy, either LetterFrequency, LetterFrequencyList, WordFrequency, or CombinedWordScore")
     parser.add_argument("-g", "--guesses", type=int, default=4,
-                        help="Number of exploration guesses to use for LetterFrequencyStrategy")
+                        help="Number of exploration guesses to use for strategies that support it")
     args = parser.parse_args()
 
     solution = args.solution
-    strat = WordleLetterFrequencyStrategy(
-        exploration_settings={"max_guesses": args.guesses})
+    exploration_settings = {"max_guesses": args.guesses}
 
-    if args.strategy == "WordFrequencyStrategy":
-        strat = WordFrequencyStrategy()
+    strat = build_strategy_from_name(args.strategy, exploration_settings)
 
     print(f"Solution is '{solution}'")
 

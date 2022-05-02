@@ -1,13 +1,10 @@
-from statistics import mean
 import wordle_dict as wd
 import numpy as np
 import argparse as arg
-from letter_frequency_strategy import WordleLetterFrequencyStrategy
-from word_frequency_strategy import WordFrequencyStrategy
 from wordle_util import check_word
 import logging
+from wordle_strategies import build_strategy_from_name
 import log_config  # import does logging config
-from wordle_util import WRONG
 
 log = logging.getLogger(__name__)
 
@@ -52,17 +49,17 @@ def print_summary_stats(test_results: tuple[int, int, list[tuple[str, int]]], st
     (wins, losses, successes, missed_words) = test_results
     win_pct = wins / (wins + losses)
     mean_guesses = np.mean([c[1] for c in successes], dtype=np.float32)
-    median_guesses = np.median([c[1] for c in successes], dtype=np.float32)
+    median_guesses = np.median([c[1] for c in successes])
 
     print(f'{strat_name}')
     print(
         f'win rate: {win_pct:0.2%}, mean guesses: {mean_guesses:#0.2f}, median guesses: {median_guesses:#0.2f}')
     print(f'wins: {wins}, losses: {losses}\n')
     print(f'missed words: {missed_words}')
-    print("Successful guess counts:")
+    # print("Successful guess counts:")
 
-    for (solution, guess_count) in successes:
-        print(f"{solution}: {guess_count}")
+    # for (solution, guess_count) in successes:
+    #     print(f"{solution}: {guess_count}")
 
 
 parser = arg.ArgumentParser(
@@ -75,20 +72,12 @@ parser.add_argument("-t", "--strategy",
                     default="LetterFrequencyStrategy", type=str)
 args = parser.parse_args()
 
-words = wd.load_dictionary()
-
-if args.strategy == "LetterFrequencyStrategy":
-    for explore_guesses in range(args.guesses_min, args.guesses_max + 1):
-        settings = {
-            "max_guesses": explore_guesses
-        }
-        print(f"Starting run for guesses={explore_guesses}")
-        results = check_strategy(lambda: WordleLetterFrequencyStrategy(
-            exploration_settings=settings, dictionary=words.copy()))
-        print_summary_stats(
-            results, f"Exploration mode for {explore_guesses} guesses")
-elif args.strategy == "WordFrequencyStrategy":
-    print("Testing WordFrequencyStrategy")
-    results = check_strategy(lambda: WordFrequencyStrategy())
+for explore_guesses in range(args.guesses_min, args.guesses_max + 1):
+    settings = {
+        "max_guesses": explore_guesses
+    }
+    print(f"Starting run for guesses={explore_guesses}")
+    results = check_strategy(
+        lambda: build_strategy_from_name(args.strategy, settings))
     print_summary_stats(
-        results, f"Word frequency strategy")
+        results, f"Exploration mode for {explore_guesses} guesses")

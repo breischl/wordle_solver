@@ -1,12 +1,7 @@
-from os import remove
 import stats
 import logging
 import log_config
 import wordle_util as wu
-from collections import Counter
-from wordle_util import CORRECT
-from wordle_util import MISPLACED
-from wordle_util import WRONG
 
 logger = logging.getLogger(__name__)
 

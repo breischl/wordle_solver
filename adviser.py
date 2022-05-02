@@ -1,7 +1,15 @@
+import argparse as arg
+from wordle_strategies import build_strategy_from_name
 
-from letter_frequency_strategy import WordleLetterFrequencyStrategy
+parser = arg.ArgumentParser(
+    description="Computer plays a game of Wordle against itself")
+parser.add_argument("-t", "--strategy", type=str, default="CombinedWordScore",
+                    help="Select a solver strategy, either LetterFrequency, LetterFrequencyList, WordFrequency, or CombinedWordScore")
+parser.add_argument("-g", "--guesses", type=int, default=4,
+                    help="Number of exploration guesses to use for strategies that support it")
+args = parser.parse_args()
 
-strat = WordleLetterFrequencyStrategy()
+strat = build_strategy_from_name(args.strategy, {"num_guesses": args.guesses})
 
 guess_num = 1
 while guess_num < 7:
