@@ -67,6 +67,7 @@ class WordleStrategy:
 
 
 def default_exploration_settings() -> map:
+    # These settings were experimentally determined to be the best chance of success, and lowest average number of guesses
     return {
         "max_guesses": 3,
         "first_word": "cares"

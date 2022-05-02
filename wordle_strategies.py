@@ -1,15 +1,13 @@
 from presorted_list_word_scorer import PresortedListWordScorer
 import wordle_dict as wd
 from word_frequency_strategy import WordFrequencyStrategy
-from wordle_strategy import WordleStrategy
+from wordle_strategy import WordleStrategy, default_exploration_settings
 from positional_frequency_scorer import PositionalFrequencyWordScorer
 import log_config  # import does logging config
 
 
 def build_default_strategy() -> WordleStrategy:
-    # These settings were experimentally determined to be the best chance of success, and lowest average number of guesses
-    settings = {"max_guesses": 1, "first_word": "cares"}
-    return build_strategy_from_name("CombinedWordScore", settings)
+    return build_strategy_from_name("CombinedWordScore", default_exploration_settings())
 
 
 def build_strategy_from_name(strat_name: str, exploration_settings: map = None):
