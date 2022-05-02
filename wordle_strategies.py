@@ -7,7 +7,9 @@ import log_config  # import does logging config
 
 
 def build_default_strategy() -> WordleStrategy:
-    return build_strategy_from_name("CombinedWordScore", {"max_guesses": 1})
+    # These settings were experimentally determined to be the best chance of success, and lowest average number of guesses
+    settings = {"max_guesses": 1, "first_word": "cares"}
+    return build_strategy_from_name("CombinedWordScore", settings)
 
 
 def build_strategy_from_name(strat_name: str, exploration_settings: map = None):

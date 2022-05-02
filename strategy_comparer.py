@@ -70,11 +70,14 @@ parser.add_argument("-gx", "--guesses_max", default=5, type=int,
                     help="Max number of guesses to stay in exploration mode")
 parser.add_argument("-t", "--strategy",
                     default="LetterFrequencyStrategy", type=str)
+parser.add_argument("-f", "--firstword", default=None, type=str,
+                    help="Force strategies to use the given first word")
 args = parser.parse_args()
 
 for explore_guesses in range(args.guesses_min, args.guesses_max + 1):
     settings = {
-        "max_guesses": explore_guesses
+        "max_guesses": explore_guesses,
+        "first_word": args.firstword
     }
     print(f"Starting run for guesses={explore_guesses}")
     results = check_strategy(

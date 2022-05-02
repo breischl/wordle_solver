@@ -1,7 +1,7 @@
 # wordle_solver
-A set of scripts around solving the popular Wordle puzzle game. The best I've managed with this gets the correct answer over 97% of the time. 
+A set of scripts around solving the popular Wordle puzzle game. The best I've managed with this gets the correct answer over 98% of the time. 
 
-This is mostly a learning exercise for me - it's my first non-trivial Python script. Please judge the code quality accordingly. :) 
+This is mostly a learning exercise for me - it's my first non-trivial Python script. It also went through a lot of revisions trying out different guessing strategies, which did not help to keep things well-factored. Please judge the code quality accordingly. :) 
 
 ## Usage
 `python adviser.py` will launch a simple console app that will advise you on what to guess, and accept results to update future guesses. For example:
@@ -40,6 +40,8 @@ python quordle_adviser.py
 
 
 ## What's It Doing?
+The following describes the "LetterFrequency" strategy that I was using. A later version changed this somewhat, to include word frequency in actual English usage. But I don't feel like rewriting this whole section since most likely nobody will ever read it. 
+
 The script has a dictionary of 5-letter words. For each of the five letter positions, it calculates how many of those words have each letter. So we have `5 positions * 26 letters = 130 letter-position` scores. Then it computes a score for each word that consists of the the frequency for each letter of that word. The highest scoring word is chosen as the guess. 
 
 The feedback is used to eliminate any words that could not possibly be a solution. Then the we repeat the entire process with the now-smaller dictionary. 

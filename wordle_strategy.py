@@ -14,6 +14,7 @@ class WordleStrategy:
 
         exploration_settings = exploration_settings or default_exploration_settings()
         self.max_exploration_guesses = exploration_settings["max_guesses"]
+        self.forced_first_word = exploration_settings["first_word"]
 
         if self.max_exploration_guesses > 0:
             self.exploration_mode = True
@@ -27,6 +28,9 @@ class WordleStrategy:
             f"next_guess, guess={self.guess_num}, exploration_mode={self.exploration_mode}")
 
         guess = None
+        if self.guess_num == 1 and self.forced_first_word:
+            return self.forced_first_word
+
         if self.exploration_mode:
             guess = self.exploration_word_scorer._choose_next_word(
                 False)
@@ -64,5 +68,6 @@ class WordleStrategy:
 
 def default_exploration_settings() -> map:
     return {
-        "max_guesses": 3
+        "max_guesses": 3,
+        "first_word": "cares"
     }

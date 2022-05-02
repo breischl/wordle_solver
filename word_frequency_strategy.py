@@ -7,11 +7,13 @@ log = logging.getLogger(__name__)
 
 
 class WordFrequencyStrategy:
-    def __init__(self, dictionary: list[tuple[str, int]] = wd.load_frequency()):
+    def __init__(self, dictionary: list[tuple[str, int]] = wd.load_frequency(), exploration_settings: map = None):
         self.dictionary = dictionary
 
+        exploration_settings = exploration_settings or {"first_word": "raise"}
+
         # This is what Dave was using, so for now we're matching that to validate parity with his implementation
-        self.forced_first_word = "raise"
+        self.forced_first_word = exploration_settings["first_word"]
 
     def next_guess(self):
         if self.forced_first_word:
