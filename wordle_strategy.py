@@ -9,6 +9,8 @@ class WordleStrategy:
     '''
 
     def __init__(self, strategy_builder: callable, exploration_settings: map = None):
+        log.debug("Building WordleStrategy with settings=%s",
+                  exploration_settings)
         self.precision_word_scorer = strategy_builder()
         self.guess_num = 1
 

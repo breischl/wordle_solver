@@ -25,7 +25,6 @@ def build_strategy_from_name(strat_name: str, exploration_settings: map = None):
 
 
 def combined_word_score_strategy(exploration_settings: map = None) -> WordleStrategy:
-    words = wd.load_combined_word_score_dictionary()
     return WordleStrategy(lambda: PresortedListWordScorer(
         wd.load_combined_word_score_dictionary()), exploration_settings)
 

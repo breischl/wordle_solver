@@ -7,6 +7,7 @@ import logging
 import log_config  # import does logging config
 from wordle_util import check_word
 from wordle_strategies import build_strategy_from_name
+from wordle_strategy import default_exploration_settings
 
 log = logging.getLogger(__name__)
 
@@ -18,12 +19,15 @@ def main():
                         help="Optionally specify the solution word for the computer to guess")
     parser.add_argument("-t", "--strategy", type=str, default="CombinedWordScore",
                         help="Select a solver strategy, either LetterFrequency, LetterFrequencyList, WordFrequency, or CombinedWordScore")
-    parser.add_argument("-g", "--guesses", type=int, default=4,
+    parser.add_argument("-g", "--guesses", type=int, default=None, required=False,
                         help="Number of exploration guesses to use for strategies that support it")
     args = parser.parse_args()
 
     solution = args.solution
-    exploration_settings = {"max_guesses": args.guesses}
+    exploration_settings = default_exploration_settings()
+
+    if args.guesses is not None:
+        exploration_settings["max_guesses"] = args.guesses
 
     strat = build_strategy_from_name(args.strategy, exploration_settings)
 

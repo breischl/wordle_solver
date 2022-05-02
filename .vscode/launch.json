@@ -5,6 +5,17 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "Python: Adviser.py",
+            "type": "python",
+            "request": "launch",
+            "program": "adviser.py",
+            "console": "integratedTerminal",
+            "justMyCode": true,
+            "args": [
+                "-g 0"
+            ]
+        },
+        {
             "name": "Python: Current File",
             "type": "python",
             "request": "launch",
