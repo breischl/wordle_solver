@@ -54,3 +54,12 @@ Tangentially, this means that it will always guess "cares" to start with, and _n
 
 ## Where's the Dictionary From?
 It's from the Javascript code of the Wordle web app. I believe it's the dictionary used by the app itself, but I didn't read the code enough to verify that. 
+
+## Mellor Strategies
+[An article appeared](https://www.9news.com/article/news/local/zevely-zone/five-magic-words-that-will-solve-wordle/509-fec2b387-5202-4d74-8c47-fde9221a82c1#l30tu0p44eve1xn6njh) about a strategy from noted crossword afficionado Myles Mellor, which claimed at various points to solve Wordle "every time", "99.5% of the time" or to find the letters 99.5% of the time. The strategy boils down to using the same five words to start with, and attempting to guess the final word using the sixth (and only remaining) guess. 
+
+The `StrictMellorStrategy` was implemented to find out how often this strategy would result in a single possible word remaining at the sixth guess. This turned out to be a disappointing 84.37% of the time.
+
+In the remainder of the cases there were multiple possible words available at the sixth guess. For example "angle" and "angel", or "ample" and "maple". The `StrictMellorStrategy` just gives up in this case. The `LaxMellorStrategy` falls back to the `CombinedWordScoreStrategy` which was found to be ideal previously - this combination is successful 96.71% of the time, a respectable but not great score compared to other options. It also takes 6 guesses to find the word in every case, except for when the word happens to be one of the five "pre-programmed" start words. 
+
+Overall the "Mellor strategy" appears strictly inferior to other strategies available.

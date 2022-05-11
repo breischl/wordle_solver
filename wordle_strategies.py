@@ -1,3 +1,5 @@
+from lax_mellor_strategy import LaxMellorStrategy
+from strict_mellor_strategy import StrictMellorStrategy
 from presorted_list_word_scorer import PresortedListWordScorer
 import wordle_dict as wd
 from word_frequency_strategy import WordFrequencyStrategy
@@ -20,6 +22,10 @@ def build_strategy_from_name(strat_name: str, exploration_settings: map = None):
             wd.load_dictionary()), exploration_settings)
     elif strat_name == "WordFrequency":
         return WordFrequencyStrategy()
+    elif strat_name == "LaxMellor":
+        return lax_mellor_strategy()
+    elif strat_name == "StrictMellor":
+        return strict_mellor_strategy()
     else:
         raise ValueError(f"Unknown strategy: {strat_name}")
 
@@ -32,3 +38,11 @@ def combined_word_score_strategy(exploration_settings: map = None) -> WordleStra
 def letter_frequency_list_strategy(exploration_settings: map = None) -> WordleStrategy:
     return WordleStrategy(lambda: PresortedListWordScorer(
         wd.load_position_frequency_dictionary()), exploration_settings)
+
+
+def lax_mellor_strategy() -> WordleStrategy:
+    return LaxMellorStrategy()
+
+
+def strict_mellor_strategy() -> WordleStrategy:
+    return StrictMellorStrategy(wd.load_position_frequency_dictionary())
