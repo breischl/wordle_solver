@@ -1,7 +1,7 @@
 # wordle_solver
 A set of scripts around solving the popular Wordle puzzle game. The best I've managed with this gets the correct answer over 99% of the time. 
 
-This is mostly a learning exercise for me - it's my first non-trivial Python script. It also went through a lot of revisions trying out different guessing strategies, which did not help to keep things well-factored. Please judge the code quality accordingly. :) 
+This is mostly a learning exercise for me - it's my first non-trivial Python script. It also went through a lot of revisions trying out different guessing strategies, which did not help to keep things well-factored. Please judge the code quality accordingly. :) In particular there are a lot of linting warnings and errors that I should probably fix, but probably won't. 
 
 ## Usage
 `python adviser.py` will launch a simple console app that will advise you on what to guess, and accept results to update future guesses. For example:

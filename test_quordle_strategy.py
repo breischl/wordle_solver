@@ -2,7 +2,6 @@ import unittest
 import quordle_strategy as qs
 import wordle_dict as wd
 import wordle_util as wu
-from wordle_util import WRONG, MISPLACED, CORRECT
 
 
 class TestWordleStrategy(unittest.TestCase):

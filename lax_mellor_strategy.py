@@ -1,8 +1,9 @@
 import logging
-import wordle_dict as wd
+
 import log_config  # import does logging config
-import wordle_strategy as ws
 import presorted_list_word_scorer as plws
+import wordle_dict as wd
+import wordle_strategy as ws
 
 log = logging.getLogger(__name__)
 

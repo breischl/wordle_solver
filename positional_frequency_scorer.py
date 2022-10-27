@@ -16,7 +16,7 @@ class PositionalFrequencyWordScorer():
 
     def _choose_next_word(self, allow_double_letters: bool) -> str:
         (words, score) = self._find_highest_scoring_words(allow_double_letters)
-        if(words):
+        if (words):
             return words[0]
         else:
             return None

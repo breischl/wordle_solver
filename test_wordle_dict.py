@@ -1,6 +1,6 @@
-import wordle_dict as wd
 import unittest
-from unittest import TestCase
+
+import wordle_dict as wd
 
 
 class TestWordleDict(unittest.TestCase):
